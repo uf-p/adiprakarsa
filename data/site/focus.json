@@ -1,0 +1,49 @@
+{
+  "section_label": "Agenda Kajian 2026–2030",
+  "title": "5 Bidang Fokus Riset Strategis",
+  "description": "Seluruh kajian Nusantara Adhi Prakarsa berorientasi pada penguatan kapasitas kebijakan nasional berbasis riset strategis terkini.",
+  "items": [
+    {
+      "title": "Kebijakan Fiskal & Reformasi Anggaran",
+      "description": "Efisiensi belanja negara, optimasi perpajakan, dan ketahanan fiskal pemerintah daerah dalam menghadapi dinamika ekonomi global.",
+      "status": "Dalam Kajian",
+      "status_type": "active",
+      "icon": "currency"
+    },
+    {
+      "title": "Kebijakan Sosial & Pemberdayaan Masyarakat",
+      "description": "Perlindungan sosial, pendidikan vokasi, dan pengentasan kemiskinan berbasis data lapangan yang akurat dan terverifikasi.",
+      "status": "Dalam Kajian",
+      "status_type": "active",
+      "icon": "people"
+    },
+    {
+      "title": "Tata Kelola & Reformasi Birokrasi",
+      "description": "Penguatan kelembagaan negara, desentralisasi yang efektif, dan tata kelola pemerintahan yang transparan dan akuntabel.",
+      "status": "Pipeline 2027",
+      "status_type": "pipeline",
+      "icon": "building"
+    },
+    {
+      "title": "Infrastruktur & Konektivitas Pembangunan",
+      "description": "Kesenjangan infrastruktur digital antardaerah, konektivitas wilayah 3T, dan kebijakan investasi publik-swasta yang strategis.",
+      "status": "Pipeline 2027",
+      "status_type": "pipeline",
+      "icon": "map"
+    },
+    {
+      "title": "Kebijakan Energi & Lingkungan",
+      "description": "Transisi energi terbarukan, kebijakan iklim, dan ketahanan pangan dalam konteks pembangunan berkelanjutan Indonesia.",
+      "status": "Pipeline 2028",
+      "status_type": "pipeline",
+      "icon": "globe"
+    }
+  ],
+  "cta_card": {
+    "label": "Kolaborasi Riset",
+    "title": "Tertarik Berkolaborasi?",
+    "description": "Nusantara Adhi Prakarsa membuka peluang kolaborasi riset bersama universitas, lembaga pemerintah, dan organisasi masyarakat sipil.",
+    "button_text": "Hubungi Kami",
+    "button_url": "#kontak"
+  }
+}

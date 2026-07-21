@@ -1,0 +1,20 @@
+{
+  "name": "adiprakarsa-institut",
+  "version": "1.0.0",
+  "description": "Website dinamis Lembaga Riset Nusantara Adiprakarsa - Sistem manajemen konten berbasis Decap CMS + Netlify",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx serve .",
+    "build": "node scripts/generate-manifest.js",
+    "manifest": "node scripts/generate-manifest.js"
+  },
+  "keywords": [
+    "research-institute",
+    "policy-research",
+    "netlify-cms",
+    "static-site"
+  ],
+  "author": "Nusantara Adiprakarsa",
+  "license": "UNLICENSED",
+  "private": true
+}

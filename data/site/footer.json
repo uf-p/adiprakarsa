@@ -1,0 +1,24 @@
+{
+  "description": "Kajian kebijakan publik berbasis riset strategis terkini untuk Indonesia yang berkeadilan, berkelanjutan, dan berdaya saing.",
+  "copyright": "© 2026 Lembaga Riset Nusantara Adhi Prakarsa (Adiprakarsa Institut). Seluruh hak cipta dilindungi.",
+  "directories_title": "Direktori Riset",
+  "directories_links": [
+    { "text": "Kebijakan Fiskal", "url": "#direktori" },
+    { "text": "Kebijakan Sosial", "url": "#direktori" },
+    { "text": "Tata Kelola", "url": "#direktori" },
+    { "text": "Infrastruktur", "url": "#direktori" },
+    { "text": "Lingkungan", "url": "#direktori" }
+  ],
+  "about_title": "Tentang Lembaga",
+  "about_links": [
+    { "text": "Profil Lembaga", "url": "#tentang" },
+    { "text": "Tim Kami", "url": "#tim" },
+    { "text": "Misi & Visi", "url": "#hero" },
+    { "text": "Kolaborasi", "url": "#kontak" }
+  ],
+  "contact_title": "Kontak",
+  "legal_links": [
+    { "text": "Kebijakan Privasi", "url": "#" },
+    { "text": "Syarat Penggunaan", "url": "#" }
+  ]
+}

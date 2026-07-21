@@ -1,0 +1,52 @@
+name: Auto-Generate Manifest
+
+on:
+  push:
+    paths:
+      - 'data/articles/**/*.json'
+      - 'data/articles/**/*.md'
+      - 'data/articles/**/*.html'
+      - '!data/articles/manifest.json'
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  generate-manifest:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Generate manifest.json
+        run: node scripts/generate-manifest.js
+
+      - name: Check if manifest changed
+        id: check
+        run: |
+          if git diff --quiet data/articles/manifest.json; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and Push manifest.json
+        if: steps.check.outputs.changed == 'true'
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/articles/manifest.json
+          git commit -m "chore: auto-generate manifest.json [skip netlify]"
+          git push
+
+      - name: No changes needed
+        if: steps.check.outputs.changed == 'false'
+        run: echo "✓ manifest.json sudah up-to-date"

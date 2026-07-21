@@ -1,0 +1,33 @@
+{
+  "badge": "Lembaga Riset · Berdiri 2026",
+  "title_line1": "Kajian Kebijakan Publik",
+  "title_highlight": "Berbasis Riset",
+  "title_line2": "Strategis Terkini",
+  "description": "Adiprakarsa Institut hadir untuk menghasilkan kajian kebijakan publik yang independen dan metodologis — menjembatani temuan riset dengan proses pengambilan keputusan nasional demi pembangunan yang berkeadilan dan berkelanjutan.",
+  "vision_label": "Visi Lembaga",
+  "vision_text": "\"Menjadi lembaga riset kebijakan publik terkemuka yang menghasilkan kajian strategis untuk mendukung pembangunan nasional yang berkeadilan, berkelanjutan, dan berdaya saing internasional.\"",
+  "cta_primary": {"text": "Akses Dokumen Riset", "url": "#direktori"},
+  "cta_secondary": {"text": "Tentang Lembaga", "url": "#tentang"},
+  "stats": [
+    {"value": "2026", "label": "Tahun Pendirian", "sublabel": "Lembaga"},
+    {"value": "5", "label": "Bidang Fokus", "sublabel": "Kajian Strategis"},
+    {"value": "2030", "label": "Target Agenda", "sublabel": "Riset Nasional"}
+  ],
+  "agenda_card": {
+    "label": "Agenda Riset",
+    "title": "Rancangan Kerja Pembangunan Berjangka 2026–2030",
+    "status": "Aktif",
+    "items": [
+      {"name": "Kebijakan Fiskal & Anggaran", "status": "Dalam Kajian", "percent": 40, "color": "gold"},
+      {"name": "Kebijakan Sosial & Vokasi", "status": "Dalam Kajian", "percent": 30, "color": "gold"},
+      {"name": "Tata Kelola & Reformasi Birokrasi", "status": "Pipeline", "percent": 15, "color": "emerald"},
+      {"name": "Infrastruktur & Konektivitas", "status": "Pipeline", "percent": 10, "color": "emerald"}
+    ],
+    "team_initials": [
+      {"initials": "WN", "color": "gold"},
+      {"initials": "IG", "color": "emerald"},
+      {"initials": "MP", "color": "blue"}
+    ],
+    "team_names": "Winarso · Iwan G. · M. Padang"
+  }
+}

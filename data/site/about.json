@@ -1,0 +1,21 @@
+{
+  "section_label": "Tentang Lembaga",
+  "title": "Lembaga Riset Nusantara Adiprakarsa",
+  "paragraphs": [
+    "Adiprakarsa Institut didirikan pada 2026, sebagai lembaga riset independen yang bergerak di bidang kajian kebijakan publik. Secara hukum, lembaga ini beroperasi di bawah naungan resmi Yayasan Nusantara Adiprakarsa, dibentuk sebagai respons terhadap kebutuhan mendesak akan lembaga riset kebijakan publik yang independen, metodologis, dan berorientasi pada kepentingan nasional jangka panjang.",
+    "Dengan fokus pada lima bidang kajian strategis — fiskal, sosial, tata kelola, infrastruktur, dan lingkungan — Adiprakarsa Institut berkomitmen untuk menghasilkan rekomendasi kebijakan yang dapat langsung digunakan oleh pembuat kebijakan di tingkat nasional maupun daerah."
+  ],
+  "values": [
+    {"title": "Independen", "description": "Riset bebas dari kepentingan politik dan korporat"},
+    {"title": "Metodologis", "description": "Setiap temuan dapat diverifikasi dan dipertanggungjawabkan"},
+    {"title": "Terbuka", "description": "Publikasi dapat diakses bebas oleh publik"}
+  ],
+  "profile": [
+    {"label": "Tahun Berdiri", "value": "2026"},
+    {"label": "Bidang Fokus", "value": "5 Sektor Strategis"},
+    {"label": "Horizon Agenda", "value": "2026–2030"},
+    {"label": "Sifat Lembaga", "value": "Independen, Non-Profit"},
+    {"label": "Domisili", "value": "Bandung, Indonesia"},
+    {"label": "Status Legalitas", "value": "Dalam Proses"}
+  ]
+}

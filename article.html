@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Artikel — Adiprakarsa Institut</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: { DEFAULT: '#0A1628', deep: '#060E1A', mid: '#14294A' },
+            gold: { DEFAULT: '#C9A84C', soft: '#F5ECD7', deep: '#A88B3D' },
+            emerald: { DEFAULT: '#2D8B6F', soft: '#D6F0E7' },
+            blue: { DEFAULT: '#2B6CB0', soft: '#DBEAFE' },
+            ink: { DEFAULT: '#1A2332', soft: '#5A6577', muted: '#8B95A5' },
+            'bg-default': '#F6F8FB',
+            'bg-alt': '#EEF1F6',
+            'surface': '#FFFFFF',
+            'surface-alt': '#FAFBFC',
+            'line': '#E2E8F0',
+            'line-soft': '#EDF0F4',
+            'red': { DEFAULT: '#C53030', soft: '#FEE2E2' },
+            'green': { DEFAULT: '#2F855A', soft: '#D6F0E7' },
+            'slate-soft': '#EEF1F6',
+          },
+          fontFamily: {
+            sans: ["'Inter'", "'Segoe UI'", 'system-ui', '-apple-system', 'sans-serif'],
+            serif: ["'Lora'", "'Georgia'", 'serif'],
+            mono: ["'JetBrains Mono'", "'Fira Code'", 'ui-monospace', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: #F4F6F9; color: #0D1B2A; }
+
+    #top-bar { background: #0D1B2A; }
+    #main-header.scrolled { box-shadow: 0 2px 18px rgba(13,27,42,0.18); }
+
+    .nav-link { position: relative; }
+    .nav-link::after {
+      content: ''; position: absolute; bottom: -3px; left: 0;
+      width: 0; height: 2px; background: #C9A84C;
+      transition: width 0.25s ease;
+    }
+    .nav-link:hover::after, .nav-link.active::after { width: 100%; }
+
+    #hero {
+      background: linear-gradient(135deg, #0D1B2A 0%, #1A2E44 45%, #122033 100%);
+      position: relative; overflow: hidden;
+    }
+    #hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 75% 40%, rgba(201,168,76,0.12) 0%, transparent 60%),
+                  radial-gradient(ellipse at 20% 80%, rgba(45,125,111,0.10) 0%, transparent 55%);
+      pointer-events: none;
+    }
+    .hero-grid {
+      position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 56px 56px;
+    }
+
+    .filter-pill {
+      cursor: pointer; transition: all 0.2s;
+      border: 1.5px solid #DDE3ED;
+      background: #fff; color: #1A2E44;
+    }
+    .filter-pill:hover  { border-color: #C9A84C; color: #C9A84C; }
+    .filter-pill.active { border-color: #0D1B2A; background: #0D1B2A; color: #F4F6F9; }
+
+    .doc-card {
+      background: #fff;
+      border: 1px solid #DDE3ED;
+      border-radius: 10px;
+      transition: box-shadow 0.25s, transform 0.25s;
+    }
+    .doc-card:hover { box-shadow: 0 8px 28px rgba(13,27,42,0.10); transform: translateY(-3px); }
+
+    .badge-draft   { background:#FEF3C7; color:#92400E; }
+    .badge-review  { background:#DBEAFE; color:#1E3A8A; }
+    .badge-final   { background:#D1FAE5; color:#065F46; }
+    .sector-tag    { background:#E6F4F2; color:#2D7D6F; font-size:0.7rem; }
+
+    .btn-primary {
+      background: linear-gradient(90deg, #C9A84C, #E8C97A);
+      color: #0D1B2A; font-weight: 700; letter-spacing: 0.02em;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(201,168,76,0.38); }
+
+    .btn-outline {
+      border: 2px solid rgba(255,255,255,0.55);
+      color: #fff; font-weight: 600;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .btn-outline:hover { border-color: #C9A84C; background: rgba(201,168,76,0.10); }
+
+    .stat-item { border-left: 3px solid #C9A84C; }
+    .card-hidden { display: none; }
+    #mobile-menu { display: none; }
+    #mobile-menu.open { display: block; }
+    footer { background: #0D1B2A; }
+
+    #search-modal {
+      display: none; position: fixed; inset: 0;
+      background: rgba(13,27,42,0.75); backdrop-filter: blur(4px);
+      z-index: 9999; align-items: flex-start; justify-content: center;
+      padding-top: 80px;
+    }
+    #search-modal.open { display: flex; }
+
+  </style>
+</head>
+
+<body class="antialiased">
+
+<!-- SEARCH MODAL -->
+<div id="search-modal" role="dialog" aria-modal="true">
+  <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden">
+    <div class="flex items-center border-b border-slate-line px-5 py-4 gap-3">
+      <svg class="w-5 h-5 text-gray-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input id="search-input" type="text" placeholder="Cari dokumen riset, kebijakan, atau sektor..." class="flex-1 outline-none text-base text-navy placeholder-gray-400 font-sans"/>
+      <button onclick="toggleSearch()" class="text-gray-400 hover:text-navy">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="px-5 py-3 text-xs text-gray-400 bg-slate-soft">
+      Cari berdasarkan judul, sektor, penulis, atau nomor referensi. Tekan <kbd class="bg-white border border-slate-line px-1 rounded">Esc</kbd> untuk tutup.
+    </div>
+    <div id="search-results" class="max-h-80 overflow-y-auto divide-y divide-slate-line"></div>
+  </div>
+</div>
+
+<!-- TOP BAR -->
+<div id="top-bar" class="text-gray-300 text-xs py-2 hidden md:block">
+  <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+    <div class="flex items-center gap-6">
+      <span class="flex items-center gap-1.5">
+        <svg class="w-3.5 h-3.5 text-gold" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        Indonesia — Nusantara Adiprakarsa Research Institute
+      </span>
+<!--      <span>Jam Operasional: Senin–Jumat, 08.00–17.00 WIB</span> -->
+    </div>
+    <div class="flex items-center gap-5">
+      <a href="https://data.go.id/" target="_blank" rel="noopener" class="hover:text-gold transition-colors">Portal SATU DATA</a>
+<!--      <span class="text-navy-600">|</span>
+      <a href="#" class="hover:text-gold transition-colors">Akses Internal</a>
+      <span class="text-navy-600">|</span>
+      <button class="flex items-center gap-1 hover:text-gold transition-colors">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        ID / EN
+      </button> -->
+    </div>
+  </div>
+</div>
+
+<!-- NAVIGATION HEADER -->
+<!-- WP Equivalent: header.php + wp_nav_menu() -->
+<header id="main-header" class="bg-white sticky top-0 z-50 transition-shadow duration-300">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+
+    <!-- Logo -->
+    <a href="index.html" class="flex items-center gap-3 shrink-0">
+      <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: linear-gradient(135deg, #0D1B2A, #1A2E44);">
+        <svg viewBox="0 0 32 32" class="w-6 h-6" fill="none">
+          <rect x="5" y="26" width="22" height="2.5" rx="1" fill="#C9A84C"/>
+          <rect x="8" y="12" width="3" height="14" rx="0.5" fill="white" opacity="0.9"/>
+          <rect x="14.5" y="9" width="3" height="17" rx="0.5" fill="white"/>
+          <rect x="21" y="12" width="3" height="14" rx="0.5" fill="white" opacity="0.9"/>
+          <path d="M4 11.5L16 4L28 11.5H4Z" fill="#C9A84C"/>
+        </svg>
+      </div>
+      <div class="leading-tight">
+        <div class="font-display font-800 text-navy text-base tracking-tight" style="font-family:'Montserrat',sans-serif; font-weight:800;">Adiprakarsa Institut</div>
+        <div class="text-gray-500 text-[10px] font-medium tracking-wide hidden sm:block">Lembaga Riset & Kajian Kebijakan Publik</div>
+      </div>
+    </a>
+
+    <!-- Desktop Nav -->
+    <nav class="hidden lg:flex items-center gap-7">
+      <a href="index.html" class="nav-link text-gray-600 font-medium text-sm hover:text-navy transition-colors">Beranda</a>
+      <a href="articles.html" class="nav-link active text-navy font-semibold text-sm">Direktori Riset</a>
+      <a href="index.html#fokus-riset" class="nav-link text-gray-600 font-medium text-sm hover:text-navy transition-colors">Fokus Riset</a>
+      <div class="relative group">
+        <a href="index.html#tentang" class="nav-link text-gray-600 font-medium text-sm hover:text-navy transition-colors flex items-center gap-1">
+          Tentang Kami
+          <svg class="w-3.5 h-3.5 mt-0.5 text-gray-400 group-hover:text-gold transition-transform group-hover:rotate-180 duration-200" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="absolute top-full left-0 mt-3 w-52 bg-white rounded-lg shadow-xl border border-slate-line opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 py-2">
+          <a href="index.html#tentang" class="block px-4 py-2 text-sm text-gray-700 hover:bg-slate-soft hover:text-navy font-medium">Sejarah Lembaga</a>
+          <a href="index.html#tentang" class="block px-4 py-2 text-sm text-gray-700 hover:bg-slate-soft hover:text-navy font-medium">Struktur Organisasi</a>
+          <a href="index.html#tim" class="block px-4 py-2 text-sm text-gray-700 hover:bg-slate-soft hover:text-navy font-medium">Tim Peneliti</a>
+          <a href="index.html#kontak" class="block px-4 py-2 text-sm text-gray-700 hover:bg-slate-soft hover:text-navy font-medium">Kemitraan</a>
+        </div>
+      </div>
+      <a href="index.html#kontak" class="nav-link text-gray-600 font-medium text-sm hover:text-navy transition-colors">Kontak</a>
+    </nav>
+
+    <!-- Right Controls -->
+    <div class="flex items-center gap-3">
+      <button onclick="toggleSearch()" class="p-2 rounded-lg text-gray-500 hover:text-navy hover:bg-slate-soft transition-colors" aria-label="Buka Pencarian">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      </button>
+      <a href="articles.html" class="btn-primary hidden sm:inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm transition-all">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+        Akses Dokumen Riset
+      </a>
+      <button id="hamburger-btn" onclick="toggleMobileMenu()" class="lg:hidden p-2 rounded-lg hover:bg-slate-soft text-gray-600">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="lg:hidden border-t border-slate-line bg-white">
+    <nav class="max-w-7xl mx-auto px-6 py-4 flex flex-col gap-2">
+      <a href="index.html" class="block py-2 text-gray-600 font-medium text-sm hover:text-navy pl-3">Beranda</a>
+      <a href="articles.html" class="block py-2 text-navy font-semibold text-sm border-l-2 border-gold pl-3">Direktori Riset</a>
+      <a href="index.html#fokus-riset" class="block py-2 text-gray-600 font-medium text-sm hover:text-navy pl-3">Fokus Riset</a>
+      <a href="index.html#tentang" class="block py-2 text-gray-600 font-medium text-sm hover:text-navy pl-3">Tentang Kami</a>
+      <a href="index.html#kontak" class="block py-2 text-gray-600 font-medium text-sm hover:text-navy pl-3">Kontak</a>
+      <a href="index.html#direktori" class="btn-primary mt-2 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-lg text-sm w-full text-center">
+        Akses Dokumen Riset
+      </a>
+    </nav>
+  </div>
+</header>
+
+  <!-- Main Content -->
+  <main>
+    <div class="py-10 bg-white">
+      <div class="max-w-4xl mx-auto px-6" id="article-container">
+
+        <!-- Back button -->
+        <div class="mb-8">
+          <a href="articles.html" class="inline-flex items-center gap-2 text-sm font-medium text-ink-soft hover:text-navy transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:16px;height:16px"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"/></svg>
+            Kembali ke Direktori
+          </a>
+        </div>
+
+        <!-- Article header -->
+        <div id="article-header" class="mb-10">
+          <div class="animate-pulse">
+            <div class="h-5 w-24 bg-gray-200 rounded mb-4"></div>
+            <div class="h-8 w-3/4 bg-gray-200 rounded mb-3"></div>
+            <div class="h-4 w-1/2 bg-gray-200 rounded mb-4"></div>
+            <div class="flex gap-2">
+              <div class="h-6 w-16 bg-gray-200 rounded-full"></div>
+              <div class="h-6 w-16 bg-gray-200 rounded-full"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Article content -->
+        <div id="article-content" class="article-content">
+        </div>
+
+        <!-- Charts -->
+        <div id="article-charts" class="mt-12 hidden">
+        </div>
+
+        <!-- Attachments -->
+        <div id="article-attachments" class="mt-12 hidden">
+        </div>
+
+        <!-- References -->
+        <div id="article-references" class="mt-12 hidden">
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Related Articles -->
+  <section id="related-articles" class="py-16 bg-slate-soft hidden">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="section-header">
+        <div class="section-label">Artikel Terkait</div>
+        <h2 class="text-2xl font-bold">Publikasi Lainnya</h2>
+      </div>
+      <div id="related-grid" class="doc-grid mt-8"></div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer id="footer" class="text-gray-300">
+    <div class="max-w-7xl mx-auto px-6 py-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+      <div class="lg:col-span-1">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-9 h-9 rounded-lg flex items-center justify-center" style="background:rgba(255,255,255,0.08);">
+            <svg viewBox="0 0 32 32" class="w-5 h-5" fill="none"><rect x="5" y="26" width="22" height="2.5" rx="1" fill="#C9A84C"/><rect x="8" y="12" width="3" height="14" rx=".5" fill="white" opacity=".8"/><rect x="14.5" y="9" width="3" height="17" rx=".5" fill="white"/><rect x="21" y="12" width="3" height="14" rx=".5" fill="white" opacity=".8"/><path d="M4 11.5L16 4L28 11.5H4Z" fill="#C9A84C"/></svg>
+          </div>
+          <div>
+            <div class="font-display font-800 text-white text-sm" style="font-family:'Montserrat',sans-serif; font-weight:800;">Adiprakarsa Institut</div>
+            <div class="text-gray-500 text-[10px]">Lembaga Riset & Kajian Kebijakan Publik</div>
+          </div>
+        </div>
+        <p class="text-gray-400 text-xs leading-relaxed mb-4">
+          Kajian kebijakan publik berbasis riset strategis terkini untuk Indonesia yang berkeadilan, berkelanjutan, dan berdaya saing.
+        </p>
+      </div>
+      <div>
+        <h4 class="text-white text-xs font-bold uppercase tracking-widest mb-4">Direktori Riset</h4>
+        <ul class="space-y-2 text-xs">
+          <li><a href="index.html#fokus-riset" class="text-gray-400 hover:text-gold transition-colors">Kebijakan Fiskal &amp; Anggaran</a></li>
+          <li><a href="index.html#fokus-riset" class="text-gray-400 hover:text-gold transition-colors">Kebijakan Sosial &amp; Vokasi</a></li>
+          <li><a href="index.html#fokus-riset" class="text-gray-400 hover:text-gold transition-colors">Tata Kelola &amp; Birokrasi</a></li>
+          <li><a href="index.html#fokus-riset" class="text-gray-400 hover:text-gold transition-colors">Infrastruktur &amp; Konektivitas</a></li>
+          <li><a href="index.html#fokus-riset" class="text-gray-400 hover:text-gold transition-colors">Kebijakan Energi &amp; Lingkungan</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-white text-xs font-bold uppercase tracking-widest mb-4">Tentang Lembaga</h4>
+        <ul class="space-y-2 text-xs">
+          <li><a href="index.html#tentang" class="text-gray-400 hover:text-gold transition-colors">Sejarah &amp; Pendirian</a></li>
+          <li><a href="index.html#tentang" class="text-gray-400 hover:text-gold transition-colors">Visi &amp; Misi</a></li>
+          <li><a href="index.html#tim" class="text-gray-400 hover:text-gold transition-colors">Tim Peneliti</a></li>
+          <li><a href="index.html#kontak" class="text-gray-400 hover:text-gold transition-colors">Kemitraan &amp; Kolaborasi</a></li>
+          <li><a href="index.html#direktori" class="text-gray-400 hover:text-gold transition-colors">Publikasi &amp; Dokumen</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-white text-xs font-bold uppercase tracking-widest mb-4">Kontak</h4>
+        <div class="space-y-2 text-xs text-gray-400">
+          <div>Bandung, Jawa Barat</div>
+          <div>info@adiprakarsa-institut.or.id</div>
+          <div>Senin–Jumat, 08.00–17.00</div>
+        </div>
+      </div>
+    </div>
+    <div class="border-t border-white/8">
+      <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        <p class="text-gray-500 text-[11px]">
+          &copy; 2026 Adiprakarsa Institut. Hak Cipta Dilindungi. Di bawah naungan Yayasan Nusantara Adiprakarsa.
+        </p>
+        <div class="flex items-center gap-6 text-[11px] text-gray-600">
+          <a href="#" class="hover:text-gold transition-colors">Kebijakan Privasi</a>
+          <a href="#" class="hover:text-gold transition-colors">Syarat Penggunaan</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll to Top -->
+  <button id="scroll-top" class="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Kembali ke atas">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5M18 15l-6-6-6 6"/></svg>
+  </button>
+
+  <!-- Shared Application Layer -->
+  <script src="js/app.js"></script>
+  <script>
+    (function () {
+      'use strict';
+
+      function esc(s) {
+        var d = document.createElement('div');
+        d.textContent = s || '';
+        return d.innerHTML;
+      }
+
+      function formatDateID(dateStr) {
+        if (!dateStr) return '';
+        var months = [
+          'Januari','Februari','Maret','April','Mei','Juni',
+          'Juli','Agustus','September','Oktober','November','Desember'
+        ];
+        try {
+          var d = new Date(dateStr);
+          return d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+        } catch (e) { return dateStr; }
+      }
+
+      function parseMarkdown(md) {
+        if (!md) return '';
+        var html = md;
+        html = html.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        html = html.replace(/```(\w*)\n([\s\S]*?)```/g, function (m, lang, code) {
+          return '<pre><code class="language-' + (lang || 'text') + '">' + code.trim() + '</code></pre>';
+        });
+        html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+        html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+        html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+        html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+        html = html.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
+        html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+        html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+        html = html.replace(/^&gt; (.+)$/gm, '<blockquote>$1</blockquote>');
+        html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+        html = html.replace(/^---+$/gm, '<hr>');
+        html = html.replace(/^(\|.+\|)\n(\|[-:| ]+\|)\n((?:\|.+\|\n?)*)/gm, function (m, headerRow, sepRow, bodyRows) {
+          var headers = headerRow.split('|').filter(function (c) { return c.trim(); });
+          var headerHtml = '<thead><tr>' + headers.map(function (h) { return '<th>' + h.trim() + '</th>'; }).join('') + '</tr></thead>';
+          var rows = bodyRows.trim().split('\n');
+          var bodyHtml = '<tbody>' + rows.map(function (row) {
+            var cells = row.split('|').filter(function (c) { return c.trim(); });
+            return '<tr>' + cells.map(function (c) { return '<td>' + c.trim() + '</td>'; }).join('') + '</tr>';
+          }).join('') + '</tbody>';
+          return '<table>' + headerHtml + bodyHtml + '</table>';
+        });
+        html = html.replace(/((?:^- .+$\n?)+)/gm, function (block) {
+          var items = block.trim().split('\n').map(function (item) {
+            return '<li>' + item.replace(/^- /, '') + '</li>';
+          }).join('');
+          return '<ul>' + items + '</ul>';
+        });
+        html = html.replace(/((?:^\d+\. .+$\n?)+)/gm, function (block) {
+          var items = block.trim().split('\n').map(function (item) {
+            return '<li>' + item.replace(/^\d+\. /, '') + '</li>';
+          }).join('');
+          return '<ol>' + items + '</ol>';
+        });
+        var lines = html.split('\n\n');
+        html = lines.map(function (block) {
+          block = block.trim();
+          if (!block) return '';
+          if (/^<(h[1-6]|ul|ol|li|table|thead|tbody|tr|pre|blockquote|hr|div)/.test(block)) {
+            return block;
+          }
+          return '<p>' + block.replace(/\n/g, '<br>') + '</p>';
+        }).join('\n');
+        return html;
+      }
+
+      function parseFrontmatter(text) {
+        var match = text.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
+        if (!match) return { meta: {}, body: text };
+        var meta = {};
+        var fmlines = match[1].split('\n');
+        for (var i = 0; i < fmlines.length; i++) {
+          var line = fmlines[i];
+          var colonIdx = line.indexOf(':');
+          if (colonIdx > 0) {
+            var key = line.substring(0, colonIdx).trim();
+            var val = line.substring(colonIdx + 1).trim();
+            if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+              val = val.slice(1, -1);
+            }
+            meta[key] = val;
+          }
+        }
+        return { meta: meta, body: match[2].trim() };
+      }
+
+      function getSlug() {
+        var params = new URLSearchParams(window.location.search);
+        var slug = params.get('slug');
+        if (slug) return slug;
+        var raw = window.location.href;
+        var qMatch = raw.match(/[?&]slug=([^&]*)/);
+        if (qMatch) return decodeURIComponent(qMatch[1]);
+        var hash = window.location.hash.replace(/^#\/?/, '');
+        if (hash) return hash;
+        var pathMatch = window.location.pathname.match(/\/artikel\/([^\/\?]+)/);
+        if (pathMatch) return pathMatch[1];
+        return null;
+      }
+
+      var SECTOR_LABELS = {
+        fiskal: 'Kebijakan Fiskal',
+        sosial: 'Kebijakan Sosial',
+        'tata-kelola': 'Tata Kelola',
+        infrastruktur: 'Infrastruktur',
+        lingkungan: 'Lingkungan',
+        energi: 'Energi & Lingkungan'
+      };
+      var STATUS_LABELS = { draft: 'Draft', review: 'Review', final: 'Final' };
+      var SECTOR_COLORS = {
+        fiskal: 'bg-gold/10 text-gold-deep border-gold/20',
+        sosial: 'bg-emerald/10 text-emerald border-emerald/20',
+        'tata-kelola': 'bg-blue/10 text-blue border-blue/20',
+        infrastruktur: 'bg-navy/10 text-navy border-navy/20',
+        lingkungan: 'bg-green/10 text-green border-green/20',
+        energi: 'bg-green/10 text-green border-green/20'
+      };
+      var STATUS_COLORS = {
+        draft: 'bg-gold-soft text-gold-deep',
+        review: 'bg-blue-soft text-blue',
+        final: 'bg-green-soft text-green'
+      };
+
+      function getFileIcon(type) {
+        switch (type) {
+          case 'pdf':
+            return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>';
+          case 'excel':
+            return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><rect x="8" y="12" width="8" height="6" rx="1"/></svg>';
+          case 'powerpoint':
+            return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><circle cx="12" cy="15" r="3"/></svg>';
+          default:
+            return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>';
+        }
+      }
+      function getFileIconBg(type) {
+        switch (type) {
+          case 'pdf': return 'bg-red-soft';
+          case 'excel': return 'bg-green-soft';
+          case 'powerpoint': return 'bg-gold-soft';
+          default: return 'bg-blue-soft';
+        }
+      }
+
+      function renderArticleHeader(article) {
+        var el = document.getElementById('article-header');
+        if (!el) return;
+        var sectorLabel = SECTOR_LABELS[article.sector] || article.sector || '';
+        var sectorColor = SECTOR_COLORS[article.sector] || 'bg-bg-alt text-ink-muted border-line';
+        var statusLabel = STATUS_LABELS[article.status] || article.status || 'Draft';
+        var statusColor = STATUS_COLORS[article.status] || 'bg-gold-soft text-gold-deep';
+        var readingTime = article.reading_time || '';
+        el.innerHTML =
+          '<div class="mb-4">' +
+            '<a href="articles.html" class="inline-flex items-center gap-1.5 text-xs font-semibold tracking-wide uppercase text-gold bg-gold-soft px-3 py-1.5 rounded-full">' +
+              sectorLabel +
+            '</a>' +
+          '</div>' +
+          '<h1 class="text-3xl md:text-4xl font-bold text-navy leading-tight mb-4" style="font-family:var(--font-serif)">' +
+            esc(article.title) +
+          '</h1>' +
+          '<div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-ink-muted mb-4">' +
+            '<span class="font-medium text-ink">' + esc(article.author) + '</span>' +
+            '<span>' + formatDateID(article.date) + '</span>' +
+            (readingTime ? '<span>' + esc(readingTime) + ' baca</span>' : '') +
+            (article.scope ? '<span>' + esc(article.scope) + '</span>' : '') +
+          '</div>' +
+          '<div class="flex flex-wrap gap-2">' +
+            '<span class="inline-flex items-center text-xs font-semibold px-3 py-1 rounded-full border ' + sectorColor + '">' + esc(sectorLabel) + '</span>' +
+            '<span class="inline-flex items-center text-xs font-semibold px-3 py-1 rounded-full ' + statusColor + '">' + esc(statusLabel) + '</span>' +
+          '</div>';
+        document.title = esc(article.title) + ' — Adiprakarsa Institut';
+      }
+
+      function renderArticleContent(article) {
+        var el = document.getElementById('article-content');
+        if (!el) return;
+        el.innerHTML = parseMarkdown(article.content);
+      }
+
+      function renderCharts(article) {
+        var container = document.getElementById('article-charts');
+        if (!container || !article.charts || !article.charts.length) return;
+        container.innerHTML = article.charts.map(function (chart, index) {
+          var canvasId = chart.id || 'chart-' + index;
+          return '<div class="chart-container">' +
+            (chart.title ? '<h4>' + esc(chart.title) + '</h4>' : '') +
+            '<canvas id="' + canvasId + '" style="max-height:360px"></canvas>' +
+          '</div>';
+        }).join('');
+        container.classList.remove('hidden');
+        requestAnimationFrame(function () {
+          article.charts.forEach(function (chart, index) {
+            var canvasId = chart.id || 'chart-' + index;
+            var config = {
+              type: chart.type || 'bar',
+              data: { labels: chart.labels, datasets: chart.datasets.map(function (ds) { return Object.assign({}, ds); }) },
+              options: chart.options || {}
+            };
+            if (typeof Chart !== 'undefined') {
+              var canvas = document.getElementById(canvasId);
+              if (canvas) new Chart(canvas, config);
+            }
+          });
+        });
+      }
+
+      function renderAttachments(article) {
+        var container = document.getElementById('article-attachments');
+        if (!container || !article.attachments || !article.attachments.length) return;
+        var cardsHtml = article.attachments.map(function (att) {
+          return '<div class="file-card">' +
+            '<div class="file-icon ' + getFileIconBg(att.type) + '">' + getFileIcon(att.type) + '</div>' +
+            '<div class="file-info"><h5>' + esc(att.name) + '</h5><span>' + esc(att.size) + '</span></div>' +
+            '<a href="' + esc(att.file) + '" class="file-download" target="_blank" rel="noopener">Unduh</a>' +
+          '</div>';
+        }).join('');
+        container.innerHTML = '<h3 class="text-xl font-bold text-navy mb-4" style="font-family:var(--font-serif)">Lampiran</h3>' + cardsHtml;
+        container.classList.remove('hidden');
+      }
+
+      function renderReferences(article) {
+        var container = document.getElementById('article-references');
+        if (!container || !article.references || !article.references.length) return;
+        var itemsHtml = article.references.map(function (ref) {
+          return '<li class="text-sm text-ink-soft leading-relaxed mb-2 pl-1">' + esc(ref) + '</li>';
+        }).join('');
+        container.innerHTML = '<h3 class="text-xl font-bold text-navy mb-4" style="font-family:var(--font-serif)">Referensi</h3>' +
+          '<ol class="list-none pl-0 space-y-1">' + itemsHtml + '</ol>';
+        container.classList.remove('hidden');
+      }
+
+      function renderRelatedArticles(currentArticle) {
+        var section = document.getElementById('related-articles');
+        var grid = document.getElementById('related-grid');
+        if (!section || !grid) return;
+        fetch('data/articles/manifest.json')
+          .then(function (r) { return r.json(); })
+          .then(function (manifest) {
+            var entries = manifest.articles || manifest.slugs || [];
+            var otherSlugs = entries.filter(function (e) {
+              var s = typeof e === 'string' ? e : e.slug;
+              return s !== currentArticle.slug;
+            });
+            if (!otherSlugs.length) { section.classList.add('hidden'); return; }
+            return Promise.allSettled(otherSlugs.map(function (entry) {
+              var slug = typeof entry === 'string' ? entry : entry.slug;
+              var filePath = typeof entry === 'string' ? entry + '.json' : entry.file;
+              return fetch('data/articles/' + filePath)
+                .then(function (r) { return r.ok ? r.json() : null; })
+                .then(function (data) {
+                  if (!data) return null;
+                  var item = Array.isArray(data) ? data[0] : data;
+                  if (item && !item.slug) item.slug = slug;
+                  return item;
+                })
+                .catch(function () { return null; });
+            }));
+          })
+          .then(function (results) {
+            if (!results) return;
+            var others = [];
+            results.forEach(function (r) { if (r.status === 'fulfilled' && r.value) others.push(r.value); });
+            if (!others.length) { section.classList.add('hidden'); return; }
+            grid.innerHTML = others.slice(0, 3).map(function (a) {
+              var badgeClass = 'badge-' + (a.status || 'draft');
+              var excerpt = a.description || a.excerpt || '';
+              return '<div class="doc-card cursor-pointer" onclick="window.location.href=\'article.html?slug=' + encodeURIComponent(a.slug) + '\'">' +
+                '<h4 class="font-semibold text-navy text-base mb-2">' + esc(a.title) + '</h4>' +
+                '<p class="text-gray-500 text-xs leading-relaxed line-clamp-3 mb-3">' + esc(excerpt) + '</p>' +
+                '<div class="doc-meta"><span class="' + badgeClass + '">' + (STATUS_LABELS[a.status] || 'Draft') + '</span>' +
+                (a.sector ? '<span class="sector-tag">' + esc(a.sector) + '</span>' : '') +
+                '</div></div>';
+            }).join('');
+            section.classList.remove('hidden');
+          })
+          .catch(function () { section.classList.add('hidden'); });
+      }
+
+      function showError(message) {
+        var header = document.getElementById('article-header');
+        if (header) {
+          header.innerHTML =
+            '<div class="text-center py-16">' +
+              '<div class="text-6xl mb-4">404</div>' +
+              '<h1 class="text-2xl font-bold text-navy mb-2">Artikel Tidak Ditemukan</h1>' +
+              '<p class="text-ink-muted mb-6">' + esc(message) + '</p>' +
+              '<a href="articles.html" class="btn-primary inline-flex items-center gap-2">Kembali ke Direktori</a>' +
+            '</div>';
+        }
+        ['article-content', 'article-charts', 'article-attachments', 'article-references'].forEach(function (id) {
+          var el = document.getElementById(id);
+          if (el) el.innerHTML = '';
+        });
+      }
+
+      window.toggleMobileMenu = function () {
+        if (typeof NAP !== 'undefined' && NAP.MobileMenu) NAP.MobileMenu.toggle();
+      };
+      window.closeMobileMenu = function () {
+        if (typeof NAP !== 'undefined' && NAP.MobileMenu) NAP.MobileMenu.close();
+      };
+      window.toggleSearch = function () {
+        if (typeof NAP !== 'undefined' && NAP.SearchModal) NAP.SearchModal.toggle();
+      };
+      window.openSearch = function () {
+        if (typeof NAP !== 'undefined' && NAP.SearchModal) NAP.SearchModal.open();
+      };
+      window.closeSearch = function () {
+        if (typeof NAP !== 'undefined' && NAP.SearchModal) NAP.SearchModal.close();
+      };
+
+      async function init() {
+        var slug = getSlug();
+        if (!slug) { showError('Parameter slug tidak ditemukan di URL.'); return; }
+
+        var article = null;
+
+        try {
+          var res = await fetch('data/articles/' + slug + '.json');
+          if (res.ok) {
+            article = await res.json();
+            if (!article.slug) article.slug = slug;
+            if (!article.description && article.excerpt) article.description = article.excerpt;
+          }
+        } catch (e) {}
+
+        if (!article) {
+          try {
+            var res2 = await fetch('data/articles/md/' + slug + '.md');
+            if (res2.ok) {
+              var text = await res2.text();
+              var parsed = parseFrontmatter(text);
+              article = {
+                slug: slug,
+                title: parsed.meta.title || slug.replace(/-/g, ' ').replace(/\b\w/g, function (c) { return c.toUpperCase(); }),
+                content: parsed.body,
+                author: parsed.meta.author || '',
+                date: parsed.meta.date || '',
+                sector: parsed.meta.sector || '',
+                scope: parsed.meta.scope || '',
+                status: parsed.meta.status || 'draft',
+                reading_time: parsed.meta.reading_time || '',
+                charts: [],
+                attachments: [],
+                references: []
+              };
+            }
+          } catch (e) {}
+        }
+
+        if (!article) { showError('Artikel dengan slug "' + slug + '" tidak ditemukan di server.'); return; }
+
+        renderArticleHeader(article);
+        renderArticleContent(article);
+        renderCharts(article);
+        renderAttachments(article);
+        renderReferences(article);
+        renderRelatedArticles(article);
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function () {
+          if (typeof NAP !== 'undefined' && NAP.ArticleRepository) NAP.ArticleRepository.loadAll();
+          init();
+        });
+      } else {
+        if (typeof NAP !== 'undefined' && NAP.ArticleRepository) NAP.ArticleRepository.loadAll();
+        init();
+      }
+
+    })();
+  </script>
+</body>
+</html>

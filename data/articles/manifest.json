@@ -1,0 +1,27 @@
+{
+  "generated": "2026-07-21T00:00:00Z",
+  "count": 3,
+  "articles": [
+    {
+      "slug": "reformasi-fiskal-daerah",
+      "file": "reformasi-fiskal-daerah.json",
+      "name": "reformasi-fiskal-daerah.json",
+      "ext": ".json",
+      "type": "json"
+    },
+    {
+      "slug": "tinjauan-kebijakan-penetapan-waktu-ibadah",
+      "file": "tinjauan-kebijakan-penetapan-waktu-ibadah.json",
+      "name": "tinjauan-kebijakan-penetapan-waktu-ibadah.json",
+      "ext": ".json",
+      "type": "json"
+    },
+    {
+      "slug": "analisis-dampak-fiscal-policy",
+      "file": "md/analisis-dampak-fiscal-policy.md",
+      "name": "analisis-dampak-fiscal-policy.md",
+      "ext": ".md",
+      "type": "markdown"
+    }
+  ]
+}

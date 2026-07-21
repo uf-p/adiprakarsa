@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Direktori Riset - Publikasi & Dokumen Riset Adiprakarsa Institut">
+  <meta name="keywords" content="adiprakarsa, institut, riset, direktori, publikasi, dokumen">
+  <meta name="author" content="Adiprakarsa Institut">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <title>Direktori Riset — Adiprakarsa Institut</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: { DEFAULT: '#0A1628', deep: '#060E1A', mid: '#14294A' },
+            gold: { DEFAULT: '#C9A84C', soft: '#F5ECD7', deep: '#A88B3D' },
+            emerald: { DEFAULT: '#2D8B6F', soft: '#D6F0E7' },
+            blue: { DEFAULT: '#2B6CB0', soft: '#DBEAFE' },
+            ink: { DEFAULT: '#1A2332', soft: '#5A6577', muted: '#8B95A5' },
+            'bg-default': '#F6F8FB',
+            'bg-alt': '#EEF1F6',
+            'surface': '#FFFFFF',
+            'surface-alt': '#FAFBFC',
+            'line': '#E2E8F0',
+            'line-soft': '#EDF0F4',
+            'red': { DEFAULT: '#C53030', soft: '#FEE2E2' },
+            'green': { DEFAULT: '#2F855A', soft: '#D6F0E7' },
+            'slate-soft': '#EEF1F6',
+          },
+          fontFamily: {
+            sans: ["'Inter'", "'Segoe UI'", 'system-ui', '-apple-system', 'sans-serif'],
+            serif: ["'Lora'", "'Georgia'", 'serif'],
+            mono: ["'JetBrains Mono'", "'Fira Code'", 'ui-monospace', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: #F4F6F9; color: #0D1B2A; }
+
+    #top-bar { background: #0D1B2A; }
+    #main-header.scrolled { box-shadow: 0 2px 18px rgba(13,27,42,0.18); }
+
+    .nav-link { position: relative; }
+    .nav-link::after {
+      content: ''; position: absolute; bottom: -3px; left: 0;
+      width: 0; height: 2px; background: #C9A84C;
+      transition: width 0.25s ease;
+    }
+    .nav-link:hover::after, .nav-link.active::after { width: 100%; }
+
+    #hero {
+      background: linear-gradient(135deg, #0D1B2A 0%, #1A2E44 45%, #122033 100%);
+      position: relative; overflow: hidden;
+    }
+    #hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 75% 40%, rgba(201,168,76,0.12) 0%, transparent 60%),
+                  radial-gradient(ellipse at 20% 80%, rgba(45,125,111,0.10) 0%, transparent 55%);
+      pointer-events: none;
+    }
+    .hero-grid {
+      position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 56px 56px;
+    }
+
+    .filter-pill {
+      cursor: pointer; transition: all 0.2s;
+      border: 1.5px solid #DDE3ED;
+      background: #fff; color: #1A2E44;
+    }
+    .filter-pill:hover  { border-color: #C9A84C; color: #C9A84C; }
+    .filter-pill.active { border-color: #0D1B2A; background: #0D1B2A; color: #F4F6F9; }
+
+    .doc-card {
+      background: #fff;
+      border: 1px solid #DDE3ED;
+      border-radius: 10px;
+      transition: box-shadow 0.25s, transform 0.25s;
+    }
+    .doc-card:hover { box-shadow: 0 8px 28px rgba(13,27,42,0.10); transform: translateY(-3px); }
+
+    .badge-draft   { background:#FEF3C7; color:#92400E; }
+    .badge-review  { background:#DBEAFE; color:#1E3A8A; }
+    .badge-final   { background:#D1FAE5; color:#065F46; }
+    .sector-tag    { background:#E6F4F2; color:#2D7D6F; font-size:0.7rem; }
+
+    .btn-primary {
+      background: linear-gradient(90deg, #C9A84C, #E8C97A);
+      color: #0D1B2A; font-weight: 700; letter-spacing: 0.02em;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(201,168,76,0.38); }
+
+    .btn-outline {
+      border: 2px solid rgba(255,255,255,0.55);
+      color: #fff; font-weight: 600;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .btn-outline:hover { border-color: #C9A84C; background: rgba(201,168,76,0.10); }
+
+    .stat-item { border-left: 3px solid #C9A84C; }
+    .card-hidden { display: none; }
+    #mobile-menu { display: none; }
+    #mobile-menu.open { display: block; }
+    footer { background: #0D1B2A; }
+
+    #search-modal {
+      display: none; position: fixed; inset: 0;
+      background: rgba(13,27,42,0.75); backdrop-filter: blur(4px);
+      z-index: 9999; align-items: flex-start; justify-content: center;
+      padding-top: 80px;
+    }
+    #search-modal.open { display: flex; }
+
+  </style>
+</head>
+
+<body class="antialiased">
+
+<!-- SEARCH MODAL -->
+<div id="search-modal" role="dialog" aria-modal="true">
+  <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden">
+    <div class="flex items-center border-b border-slate-line px-5 py-4 gap-3">
+      <svg class="w-5 h-5 text-gray-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input id="search-input" type="text" placeholder="Cari dokumen riset, kebijakan, atau sektor..." class="flex-1 outline-none text-base text-navy placeholder-gray-400 font-sans"/>
+      <button onclick="toggleSearch()" class="text-gray-400 hover:text-navy">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="px-5 py-3 text-xs text-gray-400 bg-slate-soft">
+      Cari berdasarkan judul, sektor, penulis, atau nomor referensi. Tekan <kbd class="bg-white border border-slate-line px-1 rounded">Esc</kbd> untuk tutup.
+    </div>
+    <div id="search-results" class="max-h-80 overflow-y-auto divide-y divide-slate-line"></div>
+  </div>
+</div>
+
+<!-- TOP BAR -->
+<div id="top-bar" class="text-gray-300 text-xs py-2 hidden md:block">
+  <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+    <div class="flex items-center gap-6">
+      <span class="flex items-center gap-1.5">
+        <svg class="w-3.5 h-3.5 text-gold" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        Indonesia — Nusantara Adiprakarsa Research Institute
+      </span>
+<!--      <span>Jam Operasional: Senin–Jumat, 08.00–17.00 WIB</span> -->
+    </div>
+    <div class="flex items-center gap-5">
+      <a href="https://data.go.id/" target="_blank" rel="noopener" class="hover:text-gold transition-colors">Portal SATU DATA</a>
+<!--      <span class="text-navy-600">|</span>
+      <a href="#" class="hover:text-gold transition-colors">Akses Internal</a>
+      <span class="text-navy-600">|</span>
+      <button class="flex items-center gap-1 hover:text-gold transition-colors">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        ID / EN
+      </button> -->
+    </div>
+  </div>
+</div>
+
+<!-- NAVIGATION HEADER -->
+<!-- WP Equivalent: header.php + wp_nav_menu() -->
+<header id="main-header" class="bg-white sticky top-0 z-50 transition-shadow duration-300">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+
+    <!-- Logo -->
+    <a href="index.html" class="flex items-center gap-3 shrink-0">
+      <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: linear-gradient(135deg, #0D1B2A, #1A2E44);">
+        <svg viewBox="0 0 32 32" class="w-6 h-6" fill="none">
+          <rect x="5" y="26" width="22" height="2.5" rx="1" fill="#C9A84C"/>
+          <rect x="8" y="12" width="3" height="14" rx="0.5" fill="white" opacity="0.9"/>
+          <rect x="14.5" y="9" width="3" height="17" rx="0.5" fill="white"/>
+          <rect x="21" y="12" width="3" height="14" rx="0.5" fill="white" opacity="0.9"/>
+          <path d="M4 11.5L16 4L28 11.5H4Z" fill="#C9A84C"/>
+        </svg>
+      </div>
+      <div class="leading-tight">
+        <div class="font-display font-800 text-navy text-base tracking-tight" style="font-family:'Montserrat',sans-serif; font-weight:800;">Adiprakarsa Institut</div>
+        <div class="text-gray-500 text-[10px] font-medium tracking-wide hidden sm:block">Lembaga Riset & Kajian Kebijakan Publik</div>
+      </div>
+    </a>
+
+    <!-- Desktop Nav -->
+    <nav class="hidden lg:flex items-center gap-7">
+      <a href="index.html" class="nav-link text-gray-600 font-medium text-sm hover:text-navy transition-colors">Beranda</a>
+      <a href="articles.html" class="nav-link active text-navy font-semibold text-sm">Direktori Riset</a>
+      <a href="index.html#fokus-riset" class="nav-link text-gray-600 font-medium text-sm hover:text-navy transition-colors">Fokus Riset</a>
+      <div class="relative group">
+        <a href="index.html#tentang" class="nav-link text-gray-600 font-medium text-sm hover:text-navy transition-colors flex items-center gap-1">
+          Tentang Kami
+          <svg class="w-3.5 h-3.5 mt-0.5 text-gray-400 group-hover:text-gold transition-transform group-hover:rotate-180 duration-200" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="absolute top-full left-0 mt-3 w-52 bg-white rounded-lg shadow-xl border border-slate-line opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 py-2">
+          <a href="index.html#tentang" class="block px-4 py-2 text-sm text-gray-700 hover:bg-slate-soft hover:text-navy font-medium">Sejarah Lembaga</a>
+          <a href="index.html#tentang" class="block px-4 py-2 text-sm text-gray-700 hover:bg-slate-soft hover:text-navy font-medium">Struktur Organisasi</a>
+          <a href="index.html#tim" class="block px-4 py-2 text-sm text-gray-700 hover:bg-slate-soft hover:text-navy font-medium">Tim Peneliti</a>
+          <a href="index.html#kontak" class="block px-4 py-2 text-sm text-gray-700 hover:bg-slate-soft hover:text-navy font-medium">Kemitraan</a>
+        </div>
+      </div>
+      <a href="index.html#kontak" class="nav-link text-gray-600 font-medium text-sm hover:text-navy transition-colors">Kontak</a>
+    </nav>
+
+    <!-- Right Controls -->
+    <div class="flex items-center gap-3">
+      <button onclick="toggleSearch()" class="p-2 rounded-lg text-gray-500 hover:text-navy hover:bg-slate-soft transition-colors" aria-label="Buka Pencarian">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      </button>
+      <a href="articles.html" class="btn-primary hidden sm:inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm transition-all">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+        Akses Dokumen Riset
+      </a>
+      <button id="hamburger-btn" onclick="toggleMobileMenu()" class="lg:hidden p-2 rounded-lg hover:bg-slate-soft text-gray-600">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </div>
+
+
+  <div id="mobile-menu" class="lg:hidden border-t border-slate-line bg-white">
+    <nav class="max-w-7xl mx-auto px-6 py-4 flex flex-col gap-2">
+      <a href="index.html" class="block py-2 text-gray-600 font-medium text-sm hover:text-navy pl-3">Beranda</a>
+      <a href="articles.html" class="block py-2 text-navy font-semibold text-sm border-l-2 border-gold pl-3">Direktori Riset</a>
+      <a href="index.html#fokus-riset" class="block py-2 text-gray-600 font-medium text-sm hover:text-navy pl-3">Fokus Riset</a>
+      <a href="index.html#tentang" class="block py-2 text-gray-600 font-medium text-sm hover:text-navy pl-3">Tentang Kami</a>
+      <a href="index.html#kontak" class="block py-2 text-gray-600 font-medium text-sm hover:text-navy pl-3">Kontak</a>
+      <a href="articles.html" class="btn-primary mt-2 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-lg text-sm w-full text-center">
+        Akses Dokumen Riset
+      </a>
+    </nav>
+  </div>
+</header>
+
+  <main class="py-16 bg-white min-h-[60vh]">
+    <div class="max-w-7xl mx-auto px-6">
+
+      <!-- Page header -->
+      <div class="mb-10">
+        <div class="text-gold text-xs font-bold uppercase tracking-widest mb-2">Direktori Riset</div>
+        <h1 class="font-display font-800 text-3xl text-navy">Publikasi & Dokumen Riset</h1>
+        <p class="text-gray-500 text-sm mt-2 max-w-xl">Seluruh dokumen melalui proses review internal sebelum dipublikasikan.</p>
+        <div id="article-count" class="text-gray-400 text-xs mt-3 font-medium"></div>
+      </div>
+
+      <!-- Notice -->
+      <div class="doc-notice mb-8">
+        Dokumen riset pertama Nusantara Adhi Prakarsa sedang dalam proses penyusunan. Publikasi perdana ditargetkan pada kuartal pertama 2027.
+      </div>
+
+      <!-- Filter bar -->
+      <div class="bg-slate-soft rounded-2xl p-5 mb-8 border border-slate-line">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="text-[11px] font-bold uppercase tracking-wider text-gray-400 mr-1">Sektor</span>
+          <button class="filter-pill" data-sector="Fiskal">Fiskal</button>
+          <button class="filter-pill" data-sector="Sosial">Sosial</button>
+          <button class="filter-pill" data-sector="Tata Kelola">Tata Kelola</button>
+          <button class="filter-pill" data-sector="Infrastruktur">Infrastruktur</button>
+          <button class="filter-pill" data-sector="Lingkungan">Lingkungan</button>
+          <div class="w-px h-6 bg-gray-300 mx-2 hidden sm:block"></div>
+          <span class="text-[11px] font-bold uppercase tracking-wider text-gray-400 mr-1">Status</span>
+          <button class="filter-pill" data-status="draft">Draft</button>
+          <button class="filter-pill" data-status="review">Review</button>
+          <button class="filter-pill" data-status="final">Final</button>
+          <div class="w-px h-6 bg-gray-300 mx-2 hidden sm:block"></div>
+          <button id="filter-reset" class="text-xs font-semibold text-gray-400 hover:text-navy transition-colors px-3 py-1.5 rounded-lg hover:bg-white">Reset</button>
+        </div>
+      </div>
+
+      <!-- Articles grid -->
+      <div id="articles-grid" class="doc-grid"></div>
+
+      <!-- Empty state -->
+      <div id="no-results" class="hidden text-center py-16 text-gray-400">
+        <svg class="w-12 h-12 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m6.75 12H9.75m0-3h6m-6 6h6M3.375 20.25h3.375a3.375 3.375 0 0 0 3.375-3.375V18"/></svg>
+        <p class="text-sm font-medium">Tidak ada dokumen yang sesuai filter.</p>
+        <button onclick="resetFilters()" class="text-xs text-gold hover:text-gold-dark font-semibold mt-2 transition-colors">Reset filter</button>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="text-gray-300">
+    <div class="max-w-7xl mx-auto px-6 py-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+      <div class="lg:col-span-1">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-9 h-9 rounded-lg flex items-center justify-center" style="background:rgba(255,255,255,0.08);">
+            <svg viewBox="0 0 32 32" class="w-5 h-5" fill="none"><rect x="5" y="26" width="22" height="2.5" rx="1" fill="#C9A84C"/><rect x="8" y="12" width="3" height="14" rx=".5" fill="white" opacity=".8"/><rect x="14.5" y="9" width="3" height="17" rx=".5" fill="white"/><rect x="21" y="12" width="3" height="14" rx=".5" fill="white" opacity=".8"/><path d="M4 11.5L16 4L28 11.5H4Z" fill="#C9A84C"/></svg>
+          </div>
+          <div>
+            <div class="font-display font-800 text-white text-sm" style="font-family:'Montserrat',sans-serif; font-weight:800;">Adiprakarsa Institut</div>
+            <div class="text-gray-500 text-[10px]">Lembaga Riset & Kajian Kebijakan Publik</div>
+          </div>
+        </div>
+        <p class="text-gray-400 text-xs leading-relaxed mb-4">
+          Kajian kebijakan publik berbasis riset strategis terkini untuk Indonesia yang berkeadilan, berkelanjutan, dan berdaya saing.
+        </p>
+      </div>
+      <div>
+        <h4 class="text-white text-xs font-bold uppercase tracking-widest mb-4">Direktori Riset</h4>
+        <ul class="space-y-2 text-xs">
+          <li><a href="index.html#fokus-riset" class="text-gray-400 hover:text-gold transition-colors">Kebijakan Fiskal &amp; Anggaran</a></li>
+          <li><a href="index.html#fokus-riset" class="text-gray-400 hover:text-gold transition-colors">Kebijakan Sosial &amp; Vokasi</a></li>
+          <li><a href="index.html#fokus-riset" class="text-gray-400 hover:text-gold transition-colors">Tata Kelola &amp; Birokrasi</a></li>
+          <li><a href="index.html#fokus-riset" class="text-gray-400 hover:text-gold transition-colors">Infrastruktur &amp; Konektivitas</a></li>
+          <li><a href="index.html#fokus-riset" class="text-gray-400 hover:text-gold transition-colors">Kebijakan Energi &amp; Lingkungan</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-white text-xs font-bold uppercase tracking-widest mb-4">Tentang Lembaga</h4>
+        <ul class="space-y-2 text-xs">
+          <li><a href="index.html#tentang" class="text-gray-400 hover:text-gold transition-colors">Sejarah &amp; Pendirian</a></li>
+          <li><a href="index.html#tentang" class="text-gray-400 hover:text-gold transition-colors">Visi &amp; Misi</a></li>
+          <li><a href="index.html#tim" class="text-gray-400 hover:text-gold transition-colors">Tim Peneliti</a></li>
+          <li><a href="index.html#kontak" class="text-gray-400 hover:text-gold transition-colors">Kemitraan &amp; Kolaborasi</a></li>
+          <li><a href="articles.html" class="text-gray-400 hover:text-gold transition-colors">Publikasi &amp; Dokumen</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-white text-xs font-bold uppercase tracking-widest mb-4">Kontak</h4>
+        <div class="space-y-2 text-xs text-gray-400">
+          <div>Bandung, Jawa Barat</div>
+          <div>info@adiprakarsa-institut.or.id</div>
+          <div>Senin–Jumat, 08.00–17.00</div>
+        </div>
+      </div>
+    </div>
+    <div class="border-t border-white/8">
+      <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        <p class="text-gray-500 text-[11px]">
+          &copy; 2026 Adiprakarsa Institut. Hak Cipta Dilindungi. Di bawah naungan Yayasan Nusantara Adiprakarsa.
+        </p>
+<!--        <div class="flex items-center gap-6 text-[11px] text-gray-600">
+          <a href="#" class="hover:text-gold transition-colors">Kebijakan Privasi</a>
+          <a href="#" class="hover:text-gold transition-colors">Syarat Penggunaan</a>
+        </div> -->
+      </div>
+    </div>
+  </footer>
+
+  <!-- Shared Application Layer -->
+  <script src="js/app.js"></script>
+  <script>
+    (function () {
+      'use strict';
+
+      var allArticles = [];
+      var activeFilters = { sector: null, status: null };
+
+      function sectorMatch(articleSector, filterValue) {
+        var s = (articleSector || '').toLowerCase().replace(/[\s-]/g, '');
+        var f = (filterValue || '').toLowerCase().replace(/[\s-]/g, '');
+        return s === f;
+      }
+
+      function init() {
+        NAP.ArticleRepository.loadAll().then(function (articles) {
+          allArticles = articles;
+          renderCards(allArticles);
+          updateCount(allArticles.length);
+          bindFilters();
+        });
+      }
+
+      function renderCards(articles) {
+        var grid = document.getElementById('articles-grid');
+        var empty = document.getElementById('no-results');
+        if (!grid) return;
+
+        if (!articles.length) {
+          grid.innerHTML = '';
+          if (empty) empty.classList.remove('hidden');
+          updateCount(0);
+          return;
+        }
+
+        if (empty) empty.classList.add('hidden');
+        grid.innerHTML = articles.map(function (a) {
+          return NAP.renderArticleCard(a);
+        }).join('');
+      }
+
+      function updateCount(count) {
+        var el = document.getElementById('article-count');
+        if (el) el.textContent = count + ' dokumen ditemukan';
+      }
+
+      function applyFilters() {
+        var filtered = allArticles;
+        if (activeFilters.sector) {
+          filtered = filtered.filter(function (a) {
+            return sectorMatch(a.sector, activeFilters.sector);
+          });
+        }
+        if (activeFilters.status) {
+          filtered = filtered.filter(function (a) {
+            return (a.status || 'draft') === activeFilters.status;
+          });
+        }
+        renderCards(filtered);
+        updateCount(filtered.length);
+        syncPillUI();
+      }
+
+      function syncPillUI() {
+        document.querySelectorAll('.filter-pill[data-sector]').forEach(function (p) {
+          p.classList.toggle('active', p.dataset.sector === activeFilters.sector);
+        });
+        document.querySelectorAll('.filter-pill[data-status]').forEach(function (p) {
+          p.classList.toggle('active', p.dataset.status === activeFilters.status);
+        });
+      }
+
+      function bindFilters() {
+        document.querySelectorAll('.filter-pill[data-sector]').forEach(function (pill) {
+          pill.addEventListener('click', function () {
+            var val = this.dataset.sector;
+            activeFilters.sector = activeFilters.sector === val ? null : val;
+            applyFilters();
+          });
+        });
+        document.querySelectorAll('.filter-pill[data-status]').forEach(function (pill) {
+          pill.addEventListener('click', function () {
+            var val = this.dataset.status;
+            activeFilters.status = activeFilters.status === val ? null : val;
+            applyFilters();
+          });
+        });
+        var resetBtn = document.getElementById('filter-reset');
+        if (resetBtn) {
+          resetBtn.addEventListener('click', function () {
+            activeFilters = { sector: null, status: null };
+            applyFilters();
+          });
+        }
+      }
+
+      window.resetFilters = function () {
+        activeFilters = { sector: null, status: null };
+        applyFilters();
+      };
+
+      window.toggleSearch = function () {
+        if (NAP.SearchModal) NAP.SearchModal.toggle();
+      };
+
+      window.toggleMobileMenu = function () {
+        if (NAP.MobileMenu) NAP.MobileMenu.toggle();
+      };
+
+      window.closeMobileMenu = function () {
+        if (NAP.MobileMenu) NAP.MobileMenu.close();
+      };
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+    })();
+  </script>
+
+</body>
+</html>

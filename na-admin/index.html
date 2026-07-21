@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="id"> 
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <title>Admin Panel — Adiprakarsa</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #0D1B2A;
+      --gold: #C9A84C;
+      --slate-soft: #F4F6F9;
+      --slate-line: #DDE3ED;
+    }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--slate-soft);
+      min-height: 100vh;
+    }
+    #admin-loading {
+      position: fixed; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      background: var(--slate-soft);
+      z-index: 99999;
+      transition: opacity .3s;
+    }
+    #admin-loading.hidden { opacity: 0; pointer-events: none; }
+    .spinner {
+      width: 40px; height: 40px;
+      border: 3px solid var(--slate-line);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 12px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #admin-loading h2 { font-size: 16px; font-weight: 600; color: var(--navy); margin-bottom: 4px; }
+    #admin-loading p { font-size: 13px; color: #8B95A5; }
+  </style>
+</head>
+<body>
+
+  <div id="admin-loading">
+    <div class="spinner"></div>
+    <h2>Memuat Panel Admin</h2>
+    <p>Menyiapkan Decap CMS...</p>
+  </div>
+  
+  <div id="nc-root"></div>
+  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js" onload="document.getElementById('admin-loading').classList.add('hidden')"></script>
+
+  <script>
+  // Memuat CSS utama situs Anda ke dalam panel preview Decap CMS
+  CMS.registerPreviewStyle("/css/style.css");
+  CMS.registerPreviewStyle("https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap");
+  </script>
+  
+</body>
+</html>

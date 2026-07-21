@@ -1,0 +1,92 @@
+{
+  "slug": "reformasi-fiskal-daerah",
+  "title": "Peta Jalan Reformasi Fiskal Daerah: Tantangan dan Peluang Pasca Otonomi",
+  "excerpt": "Kajian awal mengenai kapasitas fiskal daerah, celah transfer pusat-daerah, dan peluang reformasi anggaran dalam kerangka desentralisasi fiskal Indonesia.",
+  "content": "## Pendahuluan\n\nDesentralisasi fiskal di Indonesia telah mengalami transformasi signifikan sejak dimulainya era otonomi daerah pada tahun 2001. Kajian ini menganalisis kapasitas fiskal pemerintah daerah dan tantangan yang dihadapi dalam mengelola keuangan daerah secara efektif.\n\n## Metodologi\n\nPenelitian ini menggunakan pendekatan kuantitatif dengan analisis data APBD 34 provinsi selama periode 2020-2025. Data dikumpulkan dari Kementerian Keuangan dan BPK.\n\n## Temuan Utama\n\n1. **Kesenjangan fiskal** antara daerah kaya dan miskin masih sangat signifikan\n2. **Ketergantungan pada DAU** mencapai rata-rata 65% dari total pendapatan daerah\n3. **Kapasitas SDM** menjadi bottleneck utama dalam pengelolaan keuangan daerah\n\n## Rekomendasi\n\n- Penguatan kapasitas SDM keuangan daerah\n- Diversifikasi sumber pendapatan daerah\n- Perbaikan mekanisme transfer pusat-daerah",
+  "author": "Winarso, S.S.T., M.A.P.",
+  "date": "2026-07-15",
+  "sector": "fiskal",
+  "scope": "Nasional",
+  "status": "draft",
+  "reading_time": "12 menit",
+  "charts": [
+    {
+      "id": "chart-dau-dependency",
+      "title": "Ketergantungan DAU dari Total Pendapatan Daerah (2020-2025)",
+      "type": "bar",
+      "labels": ["2020", "2021", "2022", "2023", "2024", "2025"],
+      "datasets": [
+        {
+          "label": "Rata-rata DAU (%)",
+          "data": [62, 64, 65, 63, 66, 65],
+          "backgroundColor": "rgba(13, 27, 42, 0.8)"
+        },
+        {
+          "label": "Rata-rata PAD (%)",
+          "data": [38, 36, 35, 37, 34, 35],
+          "backgroundColor": "rgba(201, 168, 76, 0.8)"
+        }
+      ]
+    },
+    {
+      "id": "chart-fiscal-gap",
+      "title": "Indeks Kesenjangan Fiskal Antar Daerah",
+      "type": "line",
+      "labels": ["2020", "2021", "2022", "2023", "2024", "2025"],
+      "datasets": [
+        {
+          "label": "Indeks Kesenjangan",
+          "data": [0.42, 0.44, 0.45, 0.43, 0.46, 0.47],
+          "borderColor": "#C9A84C",
+          "backgroundColor": "rgba(201, 168, 76, 0.1)",
+          "fill": true
+        }
+      ]
+    },
+    {
+      "id": "chart-capacity-radar",
+      "title": "Profil Kapasitas Kelembagaan Daerah",
+      "type": "radar",
+      "labels": ["SDM", "Sistem", "Akuntabilitas", "Partisipasi", "Inovasi"],
+      "datasets": [
+        {
+          "label": "Rata-rata Nasional",
+          "data": [65, 58, 72, 45, 52],
+          "borderColor": "#0D1B2A",
+          "backgroundColor": "rgba(13, 27, 42, 0.1)"
+        },
+        {
+          "label": "Target 2030",
+          "data": [80, 75, 85, 70, 70],
+          "borderColor": "#C9A84C",
+          "backgroundColor": "rgba(201, 168, 76, 0.1)"
+        }
+      ]
+    }
+  ],
+  "attachments": [
+    {
+      "name": "Data APBD 34 Provinsi 2020-2025.xlsx",
+      "file": "/uploads/data-apbd-provinsi.xlsx",
+      "size": "2.4 MB",
+      "type": "excel"
+    },
+    {
+      "name": "Infografis Reformasi Fiskal Daerah.pdf",
+      "file": "/uploads/infografis-reformasi-fiskal.pdf",
+      "size": "1.8 MB",
+      "type": "pdf"
+    },
+    {
+      "name": "Presentasi Kajian Reformasi Fiskal.pptx",
+      "file": "/uploads/presentasi-reformasi-fiskal.pptx",
+      "size": "5.2 MB",
+      "type": "powerpoint"
+    }
+  ],
+  "references": [
+    "Kementerian Keuangan RI. (2025). Laporan Keuangan Pemerintah Pusat.",
+    "BPK RI. (2025). Ikhtisar Hasil Pemeriksaan Semester.",
+    "World Bank. (2024). Indonesia Economic Prospects."
+  ]
+}

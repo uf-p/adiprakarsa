@@ -1,0 +1,294 @@
+# ═══════════════════════════════════════════════════════════
+#  Decap CMS Config — Adiprakarsa Institut
+# ═══════════════════════════════════════════════════════════
+
+backend:
+  name: github
+  repo: uf-p/adiprakarsa
+  branch: main
+  base_url: https://decap-cms-oauth.vercel.app
+
+media_folder: "uploads"
+public_folder: "/uploads"
+
+collections:
+
+  # ═══════════════════════════════════════════════════════════
+  #  1. BERANDA — Hero, Visi, Statistik, Agenda Kajian
+  # ═══════════════════════════════════════════════════════════
+  - name: "beranda"
+    label: "Beranda (Hero & Visi)"
+    files:
+      - name: "hero"
+        label: "Hero — Bagian Utama"
+        file: "data/site/hero.json"
+        fields:
+          - { label: "Badge Atas", name: "badge", widget: "string" }
+          - { label: "Judul Baris 1", name: "title_line1", widget: "string" }
+          - { label: "Highlight (warna emas)", name: "title_highlight", widget: "string" }
+          - { label: "Judul Baris 2", name: "title_line2", widget: "string" }
+          - { label: "Deskripsi Singkat", name: "description", widget: "text" }
+          - { label: "Label Visi", name: "vision_label", widget: "string" }
+          - { label: "Teks Visi", name: "vision_text", widget: "text" }
+          - label: "Tombol CTA Utama"
+            name: "cta_primary"
+            widget: "object"
+            fields:
+              - { label: "Teks Tombol", name: "text", widget: "string" }
+              - { label: "URL Target", name: "url", widget: "string" }
+          - label: "Tombol CTA Sekunder"
+            name: "cta_secondary"
+            widget: "object"
+            fields:
+              - { label: "Teks Tombol", name: "text", widget: "string" }
+              - { label: "URL Target", name: "url", widget: "string" }
+          - label: "Statistik"
+            name: "stats"
+            widget: "list"
+            fields:
+              - { label: "Nilai", name: "value", widget: "string" }
+              - { label: "Label", name: "label", widget: "string" }
+              - { label: "Sub Label", name: "sublabel", widget: "string" }
+          - label: "Agenda Riset"
+            name: "agenda_card"
+            widget: "object"
+            fields:
+              - { label: "Label", name: "label", widget: "string" }
+              - { label: "Judul", name: "title", widget: "string" }
+              - { label: "Status", name: "status", widget: "string" }
+              - label: "Progress Items"
+                name: "items"
+                widget: "list"
+                fields:
+                  - { label: "Nama", name: "name", widget: "string" }
+                  - { label: "Status", name: "status", widget: "string" }
+                  - { label: "Persentase", name: "percent", widget: "number", min: 0, max: 100 }
+                  - { label: "Warna", name: "color", widget: "select", options: ["gold", "emerald"] }
+              - label: "Avatar Tim"
+                name: "team_initials"
+                widget: "list"
+                fields:
+                  - { label: "Inisial", name: "initials", widget: "string" }
+                  - { label: "Warna", name: "color", widget: "select", options: ["gold", "emerald", "navy"] }
+              - { label: "Nama Tim", name: "team_names", widget: "string" }
+
+  # ═══════════════════════════════════════════════════════════
+  #  2. MISI LEMBAGA
+  # ═══════════════════════════════════════════════════════════
+  - name: "misi"
+    label: "Misi Lembaga"
+    files:
+      - name: "missions"
+        label: "Poin-Poin Misi"
+        file: "data/site/missions.json"
+        fields:
+          - label: "Daftar Misi"
+            name: "missions"
+            widget: "list"
+            field: { label: "Teks Misi", name: "mission", widget: "string" }
+
+  # ═══════════════════════════════════════════════════════════
+  #  3. FOKUS RISET
+  # ═══════════════════════════════════════════════════════════
+  - name: "fokus_riset"
+    label: "Fokus Riset"
+    files:
+      - name: "focus"
+        label: "5 Bidang Fokus Riset"
+        file: "data/site/focus.json"
+        fields:
+          - { label: "Label", name: "section_label", widget: "string" }
+          - { label: "Judul", name: "title", widget: "string" }
+          - { label: "Deskripsi", name: "description", widget: "text" }
+          - label: "5 Bidang"
+            name: "items"
+            widget: "list"
+            fields:
+              - { label: "Judul", name: "title", widget: "string" }
+              - { label: "Deskripsi", name: "description", widget: "text" }
+              - { label: "Status", name: "status", widget: "string" }
+              - { label: "Tipe Status", name: "status_type", widget: "select", options: ["active", "pipeline"] }
+              - { label: "Ikon", name: "icon", widget: "select", options: ["currency", "people", "building", "map", "globe"] }
+          - label: "CTA Card"
+            name: "cta_card"
+            widget: "object"
+            fields:
+              - { label: "Label", name: "label", widget: "string" }
+              - { label: "Judul", name: "title", widget: "string" }
+              - { label: "Deskripsi", name: "description", widget: "text" }
+              - { label: "Teks Tombol", name: "button_text", widget: "string" }
+              - { label: "URL Tombol", name: "button_url", widget: "string" }
+
+  # ═══════════════════════════════════════════════════════════
+  #  4. TENTANG LEMBAGA
+  # ═══════════════════════════════════════════════════════════
+  - name: "tentang"
+    label: "Tentang Lembaga"
+    files:
+      - name: "about"
+        label: "Profil & Nilai"
+        file: "data/site/about.json"
+        fields:
+          - { label: "Label", name: "section_label", widget: "string" }
+          - { label: "Judul", name: "title", widget: "string" }
+          - label: "Paragraf"
+            name: "paragraphs"
+            widget: "list"
+            field: { label: "Paragraf", name: "p", widget: "text" }
+          - label: "Nilai"
+            name: "values"
+            widget: "list"
+            fields:
+              - { label: "Nama", name: "title", widget: "string" }
+              - { label: "Deskripsi", name: "description", widget: "string" }
+          - label: "Profil"
+            name: "profile"
+            widget: "list"
+            fields:
+              - { label: "Label", name: "label", widget: "string" }
+              - { label: "Nilai", name: "value", widget: "string" }
+
+  # ═══════════════════════════════════════════════════════════
+  #  5. TIM PENELITI
+  # ═══════════════════════════════════════════════════════════
+  - name: "team"
+    label: "Tim Peneliti"
+    folder: "data/team"
+    slug: "{{fields.initials}}"
+    create: true
+    summary: "{{fields.name}} — {{fields.role}}"
+    fields:
+      - { label: "ID", name: "id", widget: "string" }
+      - { label: "Nama & Gelar", name: "name", widget: "string" }
+      - { label: "Jabatan", name: "role", widget: "string" }
+      - { label: "Inisial", name: "initials", widget: "string" }
+      - { label: "Warna Avatar", name: "color", widget: "select", options: ["navy", "navy-alt", "emerald", "gold"] }
+      - { label: "Bio", name: "bio", widget: "text" }
+      - { label: "Foto", name: "photo", widget: "image", required: false }
+
+  # ═══════════════════════════════════════════════════════════
+  #  6. ARTIKEL (JSON — format lengkap dengan chart & lampiran)
+  # ═══════════════════════════════════════════════════════════
+  - name: "articles_json"
+    label: "Artikel (JSON)"
+    folder: "data/articles"
+    slug: "{{fields.slug}}"
+    create: true
+    summary: "{{fields.title}} [{{fields.status}}]"
+    fields:
+      - { label: "Slug", name: "slug", widget: "string" }
+      - { label: "Judul", name: "title", widget: "string" }
+      - { label: "Ringkasan", name: "excerpt", widget: "text" }
+      - { label: "Konten", name: "content", widget: "markdown" }
+      - { label: "Penulis", name: "author", widget: "string" }
+      - { label: "Tanggal", name: "date", widget: "date" }
+      - { label: "Sektor", name: "sector", widget: "select", options: ["fiskal", "sosial", "tatakelola", "infrastruktur", "lingkungan"] }
+      - { label: "Cakupan", name: "scope", widget: "string" }
+      - { label: "Status", name: "status", widget: "select", options: ["draft", "review", "final"] }
+      - { label: "Waktu Baca", name: "reading_time", widget: "string", default: "5 menit" }
+      - label: "Grafik"
+        name: "charts"
+        widget: "list"
+        required: false
+        fields:
+          - { label: "ID", name: "id", widget: "string" }
+          - { label: "Judul", name: "title", widget: "string" }
+          - { label: "Tipe", name: "type", widget: "select", options: ["bar", "line", "pie", "doughnut", "scatter", "radar", "polarArea"] }
+          - { label: "Labels", name: "labels", widget: "list", field: { label: "Label", name: "label", widget: "string" } }
+          - label: "Dataset"
+            name: "datasets"
+            widget: "list"
+            fields:
+              - { label: "Label", name: "label", widget: "string" }
+              - { label: "Data", name: "data", widget: "string" }
+              - { label: "Warna Border", name: "borderColor", widget: "string", default: "#C9A84C" }
+              - { label: "Warna Fill", name: "backgroundColor", widget: "string", default: "rgba(201,168,76,0.2)" }
+              - { label: "Fill", name: "fill", widget: "boolean", default: false, required: false }
+      - label: "Lampiran"
+        name: "attachments"
+        widget: "list"
+        required: false
+        fields:
+          - { label: "Nama", name: "name", widget: "string" }
+          - { label: "File", name: "file", widget: "file" }
+          - { label: "Ukuran", name: "size", widget: "string" }
+          - { label: "Tipe", name: "type", widget: "select", options: ["pdf", "excel", "powerpoint", "word", "other"] }
+      - label: "Referensi"
+        name: "references"
+        widget: "list"
+        required: false
+        field: { label: "Referensi", name: "ref", widget: "string" }
+
+  # ═══════════════════════════════════════════════════════════
+  #  7. ARTIKEL (MARKDOWN — konten saja, simpel)
+  # ═══════════════════════════════════════════════════════════
+  - name: "articles_md"
+    label: "Artikel (Markdown)"
+    folder: "data/articles/md"
+    slug: "{{slug}}"
+    create: true
+    summary: "{{title}}"
+    fields:
+      - { label: "Judul", name: "title", widget: "string" }
+      - { label: "Penulis", name: "author", widget: "string", required: false }
+      - { label: "Tanggal", name: "date", widget: "date", required: false }
+      - { label: "Sektor", name: "sector", widget: "select", options: ["fiskal", "sosial", "tatakelola", "infrastruktur", "lingkungan"], required: false }
+      - { label: "Status", name: "status", widget: "select", options: ["draft", "review", "final"], default: "draft" }
+      - { widget: "markdown", name: "body", label: "Konten Artikel" }
+
+  # ═══════════════════════════════════════════════════════════
+  #  8. KONTAK
+  # ═══════════════════════════════════════════════════════════
+  - name: "kontak"
+    label: "Kontak & Informasi"
+    files:
+      - name: "contact"
+        label: "Informasi Kontak"
+        file: "data/site/contact.json"
+        fields:
+          - { label: "Label", name: "section_label", widget: "string" }
+          - { label: "Judul", name: "title", widget: "string" }
+          - { label: "Deskripsi", name: "description", widget: "text" }
+          - { label: "Alamat", name: "address", widget: "string" }
+          - { label: "Email", name: "email", widget: "string" }
+          - { label: "Jam Operasional", name: "hours", widget: "string" }
+          - label: "Kartu Kolaborasi"
+            name: "collab_card"
+            widget: "object"
+            fields:
+              - { label: "Label", name: "label", widget: "string" }
+              - { label: "Teks", name: "text", widget: "text" }
+
+  # ═══════════════════════════════════════════════════════════
+  #  9. FOOTER
+  # ═══════════════════════════════════════════════════════════
+  - name: "footer"
+    label: "Footer Situs"
+    files:
+      - name: "footer"
+        label: "Konten Footer"
+        file: "data/site/footer.json"
+        fields:
+          - { label: "Deskripsi", name: "description", widget: "text" }
+          - { label: "Copyright", name: "copyright", widget: "string" }
+          - { label: "Judul Direktori", name: "directories_title", widget: "string" }
+          - label: "Link Direktori"
+            name: "directories_links"
+            widget: "list"
+            fields:
+              - { label: "Teks", name: "text", widget: "string" }
+              - { label: "URL", name: "url", widget: "string" }
+          - { label: "Judul Tentang", name: "about_title", widget: "string" }
+          - label: "Link Tentang"
+            name: "about_links"
+            widget: "list"
+            fields:
+              - { label: "Teks", name: "text", widget: "string" }
+              - { label: "URL", name: "url", widget: "string" }
+          - { label: "Judul Kontak", name: "contact_title", widget: "string" }
+          - label: "Link Legal"
+            name: "legal_links"
+            widget: "list"
+            fields:
+              - { label: "Teks", name: "text", widget: "string" }
+              - { label: "URL", name: "url", widget: "string" }

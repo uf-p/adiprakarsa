@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lembaga Riset & Kajian Kebijakan Publik Nasional</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy:    { DEFAULT:'#0D1B2A', 800:'#122033', 700:'#1A2E44', 600:'#1E3A52', 500:'#234D6E' },
+            slate:   { soft:'#F4F6F9', line:'#DDE3ED' },
+            gold:    { DEFAULT:'#C9A84C', light:'#E8C97A', muted:'#F5EDD4' },
+            emerald: { DEFAULT:'#2D7D6F', light:'#3BA897', muted:'#E6F4F2' },
+          },
+          fontFamily: {
+            sans:    ['Inter','sans-serif'],
+            display: ['Montserrat','sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: #F4F6F9; color: #0D1B2A; }
+
+    #top-bar { background: #0D1B2A; }
+    #main-header.scrolled { box-shadow: 0 2px 18px rgba(13,27,42,0.18); }
+
+    .nav-link { position: relative; }
+    .nav-link::after {
+      content: ''; position: absolute; bottom: -3px; left: 0;
+      width: 0; height: 2px; background: #C9A84C;
+      transition: width 0.25s ease;
+    }
+    .nav-link:hover::after, .nav-link.active::after { width: 100%; }
+
+    #hero {
+      background: linear-gradient(135deg, #0D1B2A 0%, #1A2E44 45%, #122033 100%);
+      position: relative; overflow: hidden;
+    }
+    #hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 75% 40%, rgba(201,168,76,0.12) 0%, transparent 60%),
+                  radial-gradient(ellipse at 20% 80%, rgba(45,125,111,0.10) 0%, transparent 55%);
+      pointer-events: none;
+    }
+    .hero-grid {
+      position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 56px 56px;
+    }
+
+    .filter-pill {
+      cursor: pointer; transition: all 0.2s;
+      border: 1.5px solid #DDE3ED;
+      background: #fff; color: #1A2E44;
+    }
+    .filter-pill:hover  { border-color: #C9A84C; color: #C9A84C; }
+    .filter-pill.active { border-color: #0D1B2A; background: #0D1B2A; color: #F4F6F9; }
+
+    .doc-card {
+      background: #fff;
+      border: 1px solid #DDE3ED;
+      border-radius: 10px;
+      transition: box-shadow 0.25s, transform 0.25s;
+    }
+    .doc-card:hover { box-shadow: 0 8px 28px rgba(13,27,42,0.10); transform: translateY(-3px); }
+
+    .badge-draft   { background:#FEF3C7; color:#92400E; }
+    .badge-review  { background:#DBEAFE; color:#1E3A8A; }
+    .badge-final   { background:#D1FAE5; color:#065F46; }
+    .sector-tag    { background:#E6F4F2; color:#2D7D6F; font-size:0.7rem; }
+
+    .btn-primary {
+      background: linear-gradient(90deg, #C9A84C, #E8C97A);
+      color: #0D1B2A; font-weight: 700; letter-spacing: 0.02em;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(201,168,76,0.38); }
+
+    .btn-outline {
+      border: 2px solid rgba(255,255,255,0.55);
+      color: #fff; font-weight: 600;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .btn-outline:hover { border-color: #C9A84C; background: rgba(201,168,76,0.10); }
+
+    .stat-item { border-left: 3px solid #C9A84C; }
+    .card-hidden { display: none; }
+    #mobile-menu { display: none; }
+    #mobile-menu.open { display: block; }
+    footer { background: #0D1B2A; }
+
+    #search-modal {
+      display: none; position: fixed; inset: 0;
+      background: rgba(13,27,42,0.75); backdrop-filter: blur(4px);
+      z-index: 9999; align-items: flex-start; justify-content: center;
+      padding-top: 80px;
+    }
+    #search-modal.open { display: flex; }
+
+  </style>
+</head>
+
+<body class="antialiased">
+
+<!-- SEARCH MODAL -->
+<div id="search-modal" role="dialog" aria-modal="true">
+  <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden">
+    <div class="flex items-center border-b border-slate-line px-5 py-4 gap-3">
+      <svg class="w-5 h-5 text-gray-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input id="search-input" type="text" placeholder="Cari dokumen riset, kebijakan, atau sektor..." class="flex-1 outline-none text-base text-navy placeholder-gray-400 font-sans"/>
+      <button onclick="toggleSearch()" class="text-gray-400 hover:text-navy">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="px-5 py-3 text-xs text-gray-400 bg-slate-soft">
+      Cari berdasarkan judul, sektor, penulis, atau nomor referensi. Tekan <kbd class="bg-white border border-slate-line px-1 rounded">Esc</kbd> untuk tutup.
+    </div>
+
+    <!-- TAMBAHKAN CONTAINER HASIL DI SINI -->
+    <div id="search-results" class="max-h-80 overflow-y-auto divide-y divide-slate-line"></div>
+  </div>
+</div>
+
+<!-- TOP BAR -->
+<div id="top-bar" class="text-gray-300 text-xs py-2 hidden md:block">
+  <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+    <div class="flex items-center gap-6">
+      <span class="flex items-center gap-1.5">
+        <svg class="w-3.5 h-3.5 text-gold" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        Indonesia — Nusantara Adiprakarsa Research Institute
+      </span>
+<!--      <span>Jam Operasional: Senin–Jumat, 08.00–17.00 WIB</span> -->
+    </div>
+    <div class="flex items-center gap-5">
+      <a href="https://data.go.id/" target="_blank" rel="noopener" class="hover:text-gold transition-colors">Portal SATU DATA</a>
+<!--      <span class="text-navy-600">|</span>
+      <a href="#" class="hover:text-gold transition-colors">Akses Internal</a>
+      <span class="text-navy-600">|</span>
+      <button class="flex items-center gap-1 hover:text-gold transition-colors">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        ID / EN
+      </button> -->
+    </div>
+  </div>
+</div>
+
+<!-- NAVIGATION HEADER -->
+<!-- WP Equivalent: header.php + wp_nav_menu() -->
+<header id="main-header" class="bg-white sticky top-0 z-50 transition-shadow duration-300">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+
+    <!-- Logo -->
+    <a href="#" class="flex items-center gap-3 shrink-0">
+      <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: linear-gradient(135deg, #0D1B2A, #1A2E44);">
+        <svg viewBox="0 0 32 32" class="w-6 h-6" fill="none">
+          <rect x="5" y="26" width="22" height="2.5" rx="1" fill="#C9A84C"/>
+          <rect x="8" y="12" width="3" height="14" rx="0.5" fill="white" opacity="0.9"/>
+          <rect x="14.5" y="9" width="3" height="17" rx="0.5" fill="white"/>
+          <rect x="21" y="12" width="3" height="14" rx="0.5" fill="white" opacity="0.9"/>
+          <path d="M4 11.5L16 4L28 11.5H4Z" fill="#C9A84C"/>
+        </svg>
+      </div>
+      <div class="leading-tight">
+        <div class="font-display font-800 text-navy text-base tracking-tight" style="font-family:'Montserrat',sans-serif; font-weight:800;">Adiprakarsa Institut</div>
+        <div class="text-gray-500 text-[10px] font-medium tracking-wide hidden sm:block">Lembaga Riset & Kajian Kebijakan Publik</div>
+      </div>
+    </a>
+
+    <!-- Desktop Nav -->
+    <nav class="hidden lg:flex items-center gap-7">
+      <a href="#" class="nav-link active text-navy font-semibold text-sm">Beranda</a>
+      <a href="#update" class="nav-link text-gray-600 font-medium text-sm hover:text-navy transition-colors">Update</a>
+      <a href="#fokus-riset" class="nav-link text-gray-600 font-medium text-sm hover:text-navy transition-colors">Fokus Riset</a>
+      <div class="relative group">
+        <a href="#tentang" class="nav-link text-gray-600 font-medium text-sm hover:text-navy transition-colors flex items-center gap-1">
+          Tentang Kami
+          <svg class="w-3.5 h-3.5 mt-0.5 text-gray-400 group-hover:text-gold transition-transform group-hover:rotate-180 duration-200" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="absolute top-full left-0 mt-3 w-52 bg-white rounded-lg shadow-xl border border-slate-line opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 py-2">
+          <a href="#tentang" class="block px-4 py-2 text-sm text-gray-700 hover:bg-slate-soft hover:text-navy font-medium">Sejarah Lembaga</a>
+          <a href="#tentang" class="block px-4 py-2 text-sm text-gray-700 hover:bg-slate-soft hover:text-navy font-medium">Struktur Organisasi</a>
+          <a href="#tim" class="block px-4 py-2 text-sm text-gray-700 hover:bg-slate-soft hover:text-navy font-medium">Tim Peneliti</a>
+          <a href="#kontak" class="block px-4 py-2 text-sm text-gray-700 hover:bg-slate-soft hover:text-navy font-medium">Kemitraan</a>
+        </div>
+      </div>
+      <a href="#kontak" class="nav-link text-gray-600 font-medium text-sm hover:text-navy transition-colors">Kontak</a>
+    </nav>
+
+    <!-- Right Controls -->
+    <div class="flex items-center gap-3">
+      <button onclick="toggleSearch()" aria-label="Buka Pencarian" class="p-2 rounded-lg text-gray-500 hover:text-navy hover:bg-slate-soft transition-colors">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      </button>
+      <a href="articles.html" class="btn-primary hidden sm:inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm transition-all">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+        Akses Dokumen Riset
+      </a>
+      <button id="hamburger-btn" onclick="toggleMobileMenu()" class="lg:hidden p-2 rounded-lg hover:bg-slate-soft text-gray-600">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="lg:hidden border-t border-slate-line bg-white">
+    <nav class="max-w-7xl mx-auto px-6 py-4 flex flex-col gap-2">
+      <a href="#" class="block py-2 text-navy font-semibold text-sm border-l-2 border-gold pl-3">Beranda</a>
+      <a href="#update" class="block py-2 text-gray-600 font-medium text-sm hover:text-navy pl-3">Update</a>
+      <a href="#fokus-riset" class="block py-2 text-gray-600 font-medium text-sm hover:text-navy pl-3">Fokus Riset</a>
+      <a href="#tentang" class="block py-2 text-gray-600 font-medium text-sm hover:text-navy pl-3">Tentang Kami</a>
+      <a href="#kontak" class="block py-2 text-gray-600 font-medium text-sm hover:text-navy pl-3">Kontak</a>
+      <a href="articles.html" class="btn-primary mt-2 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-lg text-sm w-full text-center">
+        Akses Dokumen Riset
+      </a>
+    </nav>
+  </div>
+</header>
+
+<!-- ════════════════════════════════════════════════════════
+  HERO SECTION
+  WP Equivalent: template-parts/hero.php + ACF fields
+════════════════════════════════════════════════════════ -->
+<section id="hero" class="text-white py-24 md:py-36 relative">
+  <div class="hero-grid"></div>
+
+  <div class="max-w-7xl mx-auto px-6 relative z-10">
+    <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+
+      <!-- Hero Text -->
+      <div>
+        <div class="inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full border border-gold/40 bg-gold/10">
+          <span class="w-1.5 h-1.5 rounded-full bg-gold animate-pulse"></span>
+          <span class="text-gold text-xs font-semibold tracking-widest uppercase">Lembaga Riset · Berdiri 2026</span>
+        </div>
+
+        <h1 class="font-display font-800 text-4xl md:text-5xl leading-tight mb-6" style="font-family:'Montserrat',sans-serif; font-weight:800; line-height:1.1;">
+          Kajian Kebijakan Publik<br/>
+          <span style="background: linear-gradient(90deg, #C9A84C, #E8C97A); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Berbasis Riset</span><br/>
+          Strategis Terkini
+        </h1>
+
+        <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4 max-w-xl" style="line-height:1.75;">
+          Nusantara Adiprakarsa hadir untuk menghasilkan kajian kebijakan publik yang independen dan metodologis — menjembatani temuan riset dengan proses pengambilan keputusan nasional demi pembangunan yang berkeadilan dan berkelanjutan.
+        </p>
+
+        <!-- Visi singkat -->
+        <div class="border-l-2 border-gold pl-4 mb-8">
+          <p class="text-gold text-xs font-semibold uppercase tracking-widest mb-1">Visi Lembaga</p>
+          <p class="text-gray-300 text-sm leading-relaxed italic">
+            "Menjadi lembaga riset kebijakan publik terkemuka yang menghasilkan kajian strategis untuk mendukung pembangunan nasional yang berkeadilan, berkelanjutan, dan berdaya saing internasional."
+          </p>
+
+        </div>
+
+        <!-- CTA -->
+        <div class="flex flex-wrap gap-4">
+          <a href="articles.html" class="btn-primary inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl text-sm font-bold">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            Akses Dokumen Riset
+          </a>
+          <a href="#tentang" class="btn-outline inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl text-sm">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M10 15l5-3-5-3v6z" fill="currentColor"/></svg>
+            Tentang Lembaga
+          </a>
+        </div>
+
+        <!-- Agenda — MENGGANTIKAN statistik palsu -->
+        <div class="grid grid-cols-3 gap-5 mt-12 pt-8 border-t border-white/10">
+          <div class="stat-item pl-4">
+            <div class="font-display font-800 text-xl text-gold" style="font-family:'Montserrat',sans-serif;">2026</div>
+            <div class="text-gray-400 text-xs mt-0.5 leading-tight">Tahun Pendirian<br/>Lembaga</div>
+          </div>
+          <div class="stat-item pl-4">
+            <div class="font-display font-800 text-xl text-gold" style="font-family:'Montserrat',sans-serif;">5</div>
+            <div class="text-gray-400 text-xs mt-0.5 leading-tight">Bidang Fokus<br/>Kajian Strategis</div>
+          </div>
+          <div class="stat-item pl-4">
+            <div class="font-display font-800 text-xl text-gold" style="font-family:'Montserrat',sans-serif;">2030</div>
+            <div class="text-gray-400 text-xs mt-0.5 leading-tight">Target Agenda<br/>Riset Nasional</div>
+          </div>
+        </div>
+        <!-- Catatan: angka di atas adalah fakta (bukan klaim) — tahun berdiri, jumlah fokus riset, horizon agenda -->
+      </div>
+
+      <!-- Hero Visual Card — Agenda Riset -->
+      <div class="hidden lg:block">
+        <div class="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-6 shadow-2xl">
+          <div class="flex items-center justify-between mb-5">
+            <div>
+              <div class="text-white/50 text-[10px] uppercase tracking-widest mb-1">Agenda Riset</div>
+              <div class="text-white font-semibold text-sm">Rancangan Kerja Pembangunan Berjangka 2026–2030</div>
+            </div>
+            <span class="badge-final text-xs px-3 py-1 rounded-full font-semibold">Aktif</span>
+          </div>
+          <!-- Progress agenda -->
+          <div class="space-y-3 mb-5">
+            <div>
+              <div class="flex justify-between text-xs mb-1">
+                <span class="text-white/70">Kebijakan Fiskal &amp; Anggaran</span>
+                <span class="text-gold">Dalam Kajian</span>
+              </div>
+              <div class="h-1.5 bg-white/10 rounded-full"><div class="h-1.5 bg-gold rounded-full" style="width:40%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between text-xs mb-1">
+                <span class="text-white/70">Kebijakan Sosial &amp; Vokasi</span>
+                <span class="text-gold">Dalam Kajian</span>
+              </div>
+              <div class="h-1.5 bg-white/10 rounded-full"><div class="h-1.5 bg-gold rounded-full" style="width:30%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between text-xs mb-1">
+                <span class="text-white/70">Tata Kelola &amp; Reformasi Birokrasi</span>
+                <span class="text-emerald-light">Pipeline</span>
+              </div>
+              <div class="h-1.5 bg-white/10 rounded-full"><div class="h-1.5 bg-emerald rounded-full" style="width:15%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between text-xs mb-1">
+                <span class="text-white/70">Infrastruktur &amp; Konektivitas</span>
+                <span class="text-emerald-light">Pipeline</span>
+              </div>
+              <div class="h-1.5 bg-white/10 rounded-full"><div class="h-1.5 bg-emerald rounded-full" style="width:10%"></div></div>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3 pt-4 border-t border-white/10">
+            <div class="flex -space-x-2">
+              <div class="w-7 h-7 rounded-full bg-gold/60 border-2 border-navy flex items-center justify-center text-[9px] text-navy font-bold">WN</div>
+              <div class="w-7 h-7 rounded-full bg-emerald/60 border-2 border-navy flex items-center justify-center text-[9px] text-white font-bold">IG</div>
+              <div class="w-7 h-7 rounded-full bg-blue-400/60 border-2 border-navy flex items-center justify-center text-[9px] text-white font-bold">MP</div>
+            </div>
+            <span class="text-white/40 text-xs">Winarso · Iwan G. · M. Padang</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════
+  MISI STRIP — menggantikan Trust Bar mitra fiktif
+════════════════════════════════════════════════════════ -->
+<div class="bg-white border-y border-slate-line py-6">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="flex flex-wrap items-center justify-between gap-6">
+      <span class="text-gray-400 text-xs font-medium tracking-widest uppercase shrink-0">Misi Kami</span>
+      <div class="flex flex-wrap gap-x-8 gap-y-3">
+        <div class="flex items-center gap-2 text-gray-600">
+          <svg class="w-4 h-4 text-gold flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <span class="text-xs font-medium">Riset Independen &amp; Metodologis</span>
+        </div>
+        <div class="flex items-center gap-2 text-gray-600">
+          <svg class="w-4 h-4 text-gold flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <span class="text-xs font-medium">Menjembatani Riset &amp; Kebijakan</span>
+        </div>
+        <div class="flex items-center gap-2 text-gray-600">
+          <svg class="w-4 h-4 text-gold flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <span class="text-xs font-medium">Membangun Ekosistem Peneliti Muda</span>
+        </div>
+        <div class="flex items-center gap-2 text-gray-600">
+          <svg class="w-4 h-4 text-gold flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <span class="text-xs font-medium">Diseminasi Terbuka untuk Publik</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+  FOKUS RISET — menggantikan Data Widget
+  WP Equivalent: template-parts/fokus-riset.php
+════════════════════════════════════════════════════════ -->
+<section id="fokus-riset" class="py-20 bg-slate-soft">
+  <div class="max-w-7xl mx-auto px-6">
+
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+      <div>
+        <div class="text-gold text-xs font-bold uppercase tracking-widest mb-2">Agenda Kajian 2026–2030</div>
+        <h2 class="font-display font-800 text-3xl text-navy" style="font-family:'Montserrat',sans-serif; font-weight:800;">
+          5 Bidang Fokus Riset Strategis
+        </h2>
+        <p class="text-gray-500 text-sm mt-2 max-w-xl">Seluruh kajian Nusantara Adiprakarsa berorientasi pada penguatan kapasitas kebijakan nasional berbasis riset strategis terkini.</p>
+      </div>
+    </div>
+
+    <!-- 5 Fokus Cards -->
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
+
+      <div class="bg-white rounded-xl border border-slate-line p-6 hover:shadow-md transition-shadow">
+        <div class="w-10 h-10 rounded-lg bg-navy flex items-center justify-center mb-4">
+          <svg class="w-5 h-5 text-gold" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <h3 class="font-semibold text-navy text-base mb-2">Kebijakan Fiskal &amp; Reformasi Anggaran</h3>
+        <p class="text-gray-500 text-xs leading-relaxed">Efisiensi belanja negara, optimasi perpajakan, dan ketahanan fiskal pemerintah daerah dalam menghadapi dinamika ekonomi global.</p>
+        <div class="mt-3"><span class="sector-tag font-semibold px-2.5 py-0.5 rounded-full text-[10px]">Dalam Kajian</span></div>
+      </div>
+
+      <div class="bg-white rounded-xl border border-slate-line p-6 hover:shadow-md transition-shadow">
+        <div class="w-10 h-10 rounded-lg bg-navy flex items-center justify-center mb-4">
+          <svg class="w-5 h-5 text-gold" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        </div>
+        <h3 class="font-semibold text-navy text-base mb-2">Kebijakan Sosial &amp; Pemberdayaan Masyarakat</h3>
+        <p class="text-gray-500 text-xs leading-relaxed">Perlindungan sosial, pendidikan vokasi, dan pengentasan kemiskinan berbasis data lapangan yang akurat dan terverifikasi.</p>
+        <div class="mt-3"><span class="sector-tag font-semibold px-2.5 py-0.5 rounded-full text-[10px]">Dalam Kajian</span></div>
+      </div>
+
+      <div class="bg-white rounded-xl border border-slate-line p-6 hover:shadow-md transition-shadow">
+        <div class="w-10 h-10 rounded-lg bg-navy flex items-center justify-center mb-4">
+          <svg class="w-5 h-5 text-gold" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+        </div>
+        <h3 class="font-semibold text-navy text-base mb-2">Tata Kelola &amp; Reformasi Birokrasi</h3>
+        <p class="text-gray-500 text-xs leading-relaxed">Penguatan kelembagaan negara, desentralisasi yang efektif, dan tata kelola pemerintahan yang transparan dan akuntabel.</p>
+        <div class="mt-3"><span class="text-[10px] px-2.5 py-0.5 rounded-full font-semibold bg-gray-100 text-gray-500">Pipeline 2027</span></div>
+      </div>
+
+      <div class="bg-white rounded-xl border border-slate-line p-6 hover:shadow-md transition-shadow">
+        <div class="w-10 h-10 rounded-lg bg-navy flex items-center justify-center mb-4">
+          <svg class="w-5 h-5 text-gold" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+        </div>
+        <h3 class="font-semibold text-navy text-base mb-2">Infrastruktur &amp; Konektivitas Pembangunan</h3>
+        <p class="text-gray-500 text-xs leading-relaxed">Kesenjangan infrastruktur digital antardaerah, konektivitas wilayah 3T, dan kebijakan investasi publik-swasta yang strategis.</p>
+        <div class="mt-3"><span class="text-[10px] px-2.5 py-0.5 rounded-full font-semibold bg-gray-100 text-gray-500">Pipeline 2027</span></div>
+      </div>
+
+      <div class="bg-white rounded-xl border border-slate-line p-6 hover:shadow-md transition-shadow">
+        <div class="w-10 h-10 rounded-lg bg-navy flex items-center justify-center mb-4">
+          <svg class="w-5 h-5 text-gold" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"/></svg>
+        </div>
+        <h3 class="font-semibold text-navy text-base mb-2">Kebijakan Energi &amp; Lingkungan</h3>
+        <p class="text-gray-500 text-xs leading-relaxed">Transisi energi terbarukan, kebijakan iklim, dan ketahanan pangan dalam konteks pembangunan berkelanjutan Indonesia.</p>
+        <div class="mt-3">
+          <span class="text-[10px] px-2.5 py-0.5 rounded-full font-semibold bg-gray-100 text-gray-500">Pipeline 2028</span>
+          
+        </div>
+      </div>
+
+      <!-- CTA Card -->
+      <div class="bg-navy rounded-xl p-6 flex flex-col justify-between">
+        <div>
+          <div class="text-gold text-xs font-bold uppercase tracking-widest mb-3">Kolaborasi Riset</div>
+          <h3 class="font-semibold text-white text-base mb-2">Tertarik Berkolaborasi?</h3>
+          <p class="text-gray-400 text-xs leading-relaxed">Nusantara Adiprakarsa membuka peluang kolaborasi riset bersama universitas, lembaga pemerintah, dan organisasi masyarakat sipil.</p>
+        </div>
+        <a href="#kontak" class="btn-primary inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold mt-4 w-fit">
+          Hubungi Kami
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════
+  DIREKTORI DOKUMEN
+  WP Equivalent: template-parts/direktori.php + WP_Query
+════════════════════════════════════════════════════════ -->
+<section id="update" class="py-20 bg-white">
+  <div class="max-w-7xl mx-auto px-6">
+
+    <div class="mb-10">
+      <div class="text-gold text-xs font-bold uppercase tracking-widest mb-2">Update Berita dan Riset</div>
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <h2 class="font-display font-800 text-3xl text-navy" style="font-family:'Montserrat',sans-serif; font-weight:800;">
+            Publikasi &amp; Dokumen Riset
+          </h2>
+          <p class="text-gray-500 text-sm mt-2">Seluruh dokumen melalui proses review internal sebelum dipublikasikan.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filter -->
+    <div class="bg-slate-soft rounded-2xl p-5 mb-8 border border-slate-line">
+      <div class="flex flex-wrap gap-4 items-start">
+        <div>
+          <div class="text-[10px] text-gray-400 uppercase tracking-widest mb-2 font-semibold">Sektor</div>
+          <div class="flex flex-wrap gap-2">
+            <button class="filter-pill active text-xs px-3.5 py-1.5 rounded-full font-semibold" data-filter="sector" data-value="all">Semua</button>
+            <button class="filter-pill text-xs px-3.5 py-1.5 rounded-full font-semibold" data-filter="sector" data-value="fiskal">Fiskal</button>
+            <button class="filter-pill text-xs px-3.5 py-1.5 rounded-full font-semibold" data-filter="sector" data-value="sosial">Sosial</button>
+            <button class="filter-pill text-xs px-3.5 py-1.5 rounded-full font-semibold" data-filter="sector" data-value="tatakelola">Tata Kelola</button>
+          </div>
+        </div>
+        <div class="w-px bg-slate-line self-stretch hidden md:block"></div>
+        <div>
+          <div class="text-[10px] text-gray-400 uppercase tracking-widest mb-2 font-semibold">Status</div>
+          <div class="flex flex-wrap gap-2">
+            <button class="filter-pill active text-xs px-3.5 py-1.5 rounded-full font-semibold" data-filter="status" data-value="all">Semua</button>
+            <button class="filter-pill text-xs px-3.5 py-1.5 rounded-full font-semibold" data-filter="status" data-value="final">Final</button>
+            <button class="filter-pill text-xs px-3.5 py-1.5 rounded-full font-semibold" data-filter="status" data-value="review">Dalam Review</button>
+            <button class="filter-pill text-xs px-3.5 py-1.5 rounded-full font-semibold" data-filter="status" data-value="draft">Draft</button>
+          </div>
+        </div>
+        <div class="md:ml-auto self-end">
+          <button onclick="resetFilters()" class="text-xs text-gray-400 hover:text-navy transition-colors flex items-center gap-1.5 font-medium">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12a9 9 0 109-9M3 3v5h5"/></svg>
+            Reset
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="no-results" class="hidden text-center py-12 text-gray-400">
+      <svg class="w-10 h-10 mx-auto mb-3 opacity-40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      <p class="text-sm font-medium">Tidak ada dokumen yang sesuai filter.</p>
+      <button onclick="resetFilters()" class="text-gold font-semibold text-sm mt-2 hover:underline">Reset Filter</button>
+    </div>
+
+    <div id="cards-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <article class="doc-card p-6 flex flex-col gap-4" data-sector="fiskal" data-status="draft">
+        <div class="flex items-start justify-between gap-3">
+          <div class="w-10 h-10 rounded-lg flex items-center justify-center shrink-0" style="background:#EEF2FF;">
+            <svg class="w-5 h-5" style="color:#3730A3;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          </div>
+          <span class="badge-draft text-[10px] px-2.5 py-1 rounded-full font-bold shrink-0">○ Draft</span>
+        </div>
+        <div class="flex flex-wrap gap-1.5">
+          <span class="sector-tag font-semibold px-2.5 py-0.5 rounded-full">Fiskal</span>
+          <span class="text-[10px] px-2.5 py-0.5 rounded-full font-medium bg-gray-100 text-gray-500">Nasional</span>
+          
+        </div>
+        <div>
+          <h3 class="font-semibold text-navy text-base leading-snug mb-2">
+            Peta Jalan Reformasi Fiskal Daerah: Tantangan dan Peluang Pasca Otonomi
+            
+          </h3>
+          <p class="text-gray-500 text-xs leading-relaxed line-clamp-3">
+            Kajian awal mengenai kapasitas fiskal daerah, celah transfer pusat-daerah, dan peluang reformasi anggaran dalam kerangka desentralisasi fiskal Indonesia.
+          </p>
+        </div>
+        <div class="flex flex-wrap items-center gap-3 text-[10px] text-gray-400 border-t border-slate-line pt-4">
+          <span class="flex items-center gap-1">
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            2026 — Dalam Penyusunan
+          </span>
+          <span class="flex items-center gap-1">
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8z"/></svg>
+            Winarso, S.S.T., M.A.P.
+          </span>
+        </div>
+        <div class="flex gap-2 mt-auto">
+          <button class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-gray-100 text-gray-400 text-xs font-semibold cursor-not-allowed" disabled>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+            Belum Tersedia
+          </button>
+        </div>
+      </article>
+
+      <article class="doc-card p-6 flex flex-col gap-4" data-sector="sosial" data-status="draft">
+        <div class="flex items-start justify-between gap-3">
+          <div class="w-10 h-10 rounded-lg flex items-center justify-center shrink-0" style="background:#ECFDF5;">
+            <svg class="w-5 h-5" style="color:#065F46;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          </div>
+          <span class="badge-draft text-[10px] px-2.5 py-1 rounded-full font-bold shrink-0">○ Draft</span>
+        </div>
+        <div class="flex flex-wrap gap-1.5">
+          <span class="text-[10px] px-2.5 py-0.5 rounded-full font-semibold" style="background:#FEF3C7;color:#92400E;">Sosial</span>
+          <span class="text-[10px] px-2.5 py-0.5 rounded-full font-medium bg-gray-100 text-gray-500">Daerah</span>
+          
+        </div>
+        <div>
+          <h3 class="font-semibold text-navy text-base leading-snug mb-2">
+            Evaluasi Efektivitas Program Vokasi dalam Mengurangi Pengangguran Struktural
+            
+          </h3>
+          <p class="text-gray-500 text-xs leading-relaxed line-clamp-3">
+            Tinjauan kritis terhadap program pendidikan vokasi pemerintah dan relevansinya dengan kebutuhan pasar kerja daerah dalam era transformasi industri.
+          </p>
+        </div>
+        <div class="flex flex-wrap items-center gap-3 text-[10px] text-gray-400 border-t border-slate-line pt-4">
+          <span class="flex items-center gap-1">
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            2026 — Dalam Penyusunan
+          </span>
+          <span class="flex items-center gap-1">
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8z"/></svg>
+            Iwan Gunawan, S.E.
+          </span>
+        </div>
+        <div class="flex gap-2 mt-auto">
+          <button class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-gray-100 text-gray-400 text-xs font-semibold cursor-not-allowed" disabled>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+            Belum Tersedia
+          </button>
+        </div>
+      </article>
+
+      <article class="doc-card p-6 flex flex-col gap-4" data-sector="tatakelola" data-status="draft">
+        <div class="flex items-start justify-between gap-3">
+          <div class="w-10 h-10 rounded-lg flex items-center justify-center shrink-0" style="background:#FDF6E3;">
+            <svg class="w-5 h-5" style="color:#92400E;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+          </div>
+          <span class="badge-draft text-[10px] px-2.5 py-1 rounded-full font-bold shrink-0">○ Draft</span>
+        </div>
+        <div class="flex flex-wrap gap-1.5">
+          <span class="text-[10px] px-2.5 py-0.5 rounded-full font-semibold" style="background:#FEE2E2;color:#991B1B;">Tata Kelola</span>
+          <span class="text-[10px] px-2.5 py-0.5 rounded-full font-medium bg-gray-100 text-gray-500">Nasional</span>
+          
+        </div>
+        <div>
+          <h3 class="font-semibold text-navy text-base leading-snug mb-2">
+            Indeks Kapasitas Kelembagaan Pemerintah Daerah: Kerangka Pengukuran Awal
+            
+          </h3>
+          <p class="text-gray-500 text-xs leading-relaxed line-clamp-3">
+            Usulan kerangka pengukuran kapasitas kelembagaan pemerintah daerah sebagai instrumen evaluasi reformasi birokrasi dan peningkatan kualitas layanan publik.
+          </p>
+        </div>
+        <div class="flex flex-wrap items-center gap-3 text-[10px] text-gray-400 border-t border-slate-line pt-4">
+          <span class="flex items-center gap-1">
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            2026 — Dalam Penyusunan
+          </span>
+          <span class="flex items-center gap-1">
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8z"/></svg>
+            Muhammad Padang, S.T.
+          </span>
+        </div>
+        <div class="flex gap-2 mt-auto">
+          <button class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-gray-100 text-gray-400 text-xs font-semibold cursor-not-allowed" disabled>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+            Belum Tersedia
+          </button>
+        </div>
+      </article>
+
+    </div>
+
+    <!-- Pesan jujur untuk pengunjung -->
+    <div class="mt-8 text-center">
+      <div class="inline-flex items-center gap-2 bg-slate-soft border border-slate-line rounded-xl px-6 py-3 text-sm text-gray-500">
+        <svg class="w-4 h-4 text-gold flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>
+        Dokumen riset pertama Nusantara Adiprakarsa sedang dalam proses penyusunan. Publikasi perdana ditargetkan pada kuartal pertama 2027.
+        
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════
+  TIM INTI
+  WP Equivalent: template-parts/tim.php + CPT 'researcher'
+════════════════════════════════════════════════════════ -->
+<section id="tim" class="py-20 bg-slate-soft">
+  <div class="max-w-7xl mx-auto px-6">
+
+    <div class="mb-10">
+      <div class="text-gold text-xs font-bold uppercase tracking-widest mb-2">Peneliti &amp; Pengkaji</div>
+      <h2 class="font-display font-800 text-3xl text-navy" style="font-family:'Montserrat',sans-serif; font-weight:800;">Tim Inti Nusantara Adiprakarsa</h2>
+      <p class="text-gray-500 text-sm mt-2">Para praktisi dan akademisi yang mendedikasikan keahliannya untuk kajian kebijakan publik nasional.</p>
+      
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6">
+
+      <!-- Winarso -->
+      <div class="bg-white rounded-xl border border-slate-line p-6 text-center hover:shadow-md transition-shadow">
+        <div class="w-16 h-16 rounded-full bg-navy mx-auto mb-4 flex items-center justify-center">
+          <span class="text-gold font-display font-800 text-xl" style="font-family:'Montserrat',sans-serif;">WN</span>
+        </div>
+
+        <h3 class="font-semibold text-navy text-base">Winarso, S.S.T., M.A.P.</h3>
+        <div class="text-gold text-xs font-semibold mt-1 mb-3">Direktur Eksekutif</div>
+        <p class="text-gray-500 text-xs leading-relaxed">
+          Alumni STAN angkatan 1990-an. Spesialisasi kebijakan fiskal dan ekonomi pembangunan dengan pengalaman panjang di sektor keuangan negara.
+        </p>
+        
+      </div>
+
+      <!-- Iwan Gunawan -->
+      <div class="bg-white rounded-xl border border-slate-line p-6 text-center hover:shadow-md transition-shadow">
+        <div class="w-16 h-16 rounded-full bg-emerald mx-auto mb-4 flex items-center justify-center">
+          <span class="text-white font-display font-800 text-xl" style="font-family:'Montserrat',sans-serif;">IG</span>
+        </div>
+        
+        <h3 class="font-semibold text-navy text-base">Iwan Gunawan, S.E.</h3>
+        <div class="text-gold text-xs font-semibold mt-1 mb-3">Kepala Peneliti</div>
+        <p class="text-gray-500 text-xs leading-relaxed">
+          Spesialisasi kebijakan sosial dan perlindungan masyarakat. Berpengalaman dalam analisis program pemberdayaan dan evaluasi dampak kebijakan sosial.
+        </p>
+        
+      </div>
+
+      <!-- Muhammad Padang -->
+      <div class="bg-white rounded-xl border border-slate-line p-6 text-center hover:shadow-md transition-shadow">
+        <div class="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style="background:#1A2E44;">
+          <span class="text-gold font-display font-800 text-xl" style="font-family:'Montserrat',sans-serif;">MP</span>
+        </div>
+        
+        <h3 class="font-semibold text-navy text-base">Muhammad Padang, S.T.</h3>
+        <div class="text-gold text-xs font-semibold mt-1 mb-3">Peneliti Senior</div>
+        <p class="text-gray-500 text-xs leading-relaxed">
+          Spesialisasi tata kelola dan hukum kebijakan publik. Fokus pada reformasi kelembagaan dan pengukuran kapasitas birokrasi daerah.
+        </p>
+        
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════
+  TENTANG LEMBAGA
+  WP Equivalent: template-parts/tentang.php
+════════════════════════════════════════════════════════ -->
+<section id="tentang" class="py-20 bg-white">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="grid lg:grid-cols-2 gap-12 items-center">
+      <div>
+        <div class="text-gold text-xs font-bold uppercase tracking-widest mb-2">Tentang Lembaga</div>
+        <h2 class="font-display font-800 text-3xl text-navy mb-6" style="font-family:'Montserrat',sans-serif; font-weight:800;">
+          Lembaga Riset & Kajian Kebijakan Publik
+        </h2>
+        <p class="text-gray-600 text-sm leading-relaxed mb-4">
+          Nusantara Adiprakarsa didirikan pada 2026 sebagai respons terhadap kebutuhan mendesak akan lembaga riset kebijakan publik yang independen, metodologis, dan berorientasi pada kepentingan nasional jangka panjang.
+          
+        </p>
+        <p class="text-gray-600 text-sm leading-relaxed mb-6">
+          Dengan fokus pada lima bidang kajian strategis — fiskal, sosial, tata kelola, infrastruktur, dan lingkungan — Nusantara Adiprakarsa berkomitmen untuk menghasilkan rekomendasi kebijakan yang dapat langsung digunakan oleh pembuat kebijakan di tingkat nasional maupun daerah.
+        </p>
+
+        <!-- Nilai lembaga -->
+        <div class="space-y-3">
+          <div class="flex items-start gap-3">
+            <div class="w-6 h-6 rounded-full bg-gold/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <svg class="w-3 h-3 text-gold" fill="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <div><div class="font-semibold text-navy text-sm">Independen</div><div class="text-gray-500 text-xs">Riset bebas dari kepentingan politik dan korporat</div></div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="w-6 h-6 rounded-full bg-gold/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <svg class="w-3 h-3 text-gold" fill="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <div><div class="font-semibold text-navy text-sm">Metodologis</div><div class="text-gray-500 text-xs">Setiap temuan dapat diverifikasi dan dipertanggungjawabkan</div></div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="w-6 h-6 rounded-full bg-gold/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <svg class="w-3 h-3 text-gold" fill="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <div><div class="font-semibold text-navy text-sm">Terbuka</div><div class="text-gray-500 text-xs">Publikasi dapat diakses bebas oleh publik</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Visual info lembaga -->
+      <div class="bg-slate-soft rounded-2xl p-8 border border-slate-line">
+        <div class="text-gold text-xs font-bold uppercase tracking-widest mb-5">Profil Lembaga</div>
+        <div class="space-y-4">
+          <div class="flex justify-between items-center border-b border-slate-line pb-3">
+            <span class="text-sm text-gray-500">Tahun Berdiri</span>
+            <span class="font-semibold text-navy text-sm">2026</span>
+          </div>
+          <div class="flex justify-between items-center border-b border-slate-line pb-3">
+            <span class="text-sm text-gray-500">Bidang Fokus</span>
+            <span class="font-semibold text-navy text-sm">5 Sektor Strategis</span>
+          </div>
+          <div class="flex justify-between items-center border-b border-slate-line pb-3">
+            <span class="text-sm text-gray-500">Horizon Agenda</span>
+            <span class="font-semibold text-navy text-sm">2026–2030</span>
+          </div>
+          <div class="flex justify-between items-center border-b border-slate-line pb-3">
+            <span class="text-sm text-gray-500">Sifat Lembaga</span>
+            <span class="font-semibold text-navy text-sm">Independen, Non-Profit
+              
+            </span>
+          </div>
+          <div class="flex justify-between items-center border-b border-slate-line pb-3">
+            <span class="text-sm text-gray-500">Domisili</span>
+            <span class="font-semibold text-navy text-sm">Bandung, Indonesia
+              
+            </span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-sm text-gray-500">Status Legalitas</span>
+            <span class="font-semibold text-navy text-sm">Dalam Proses
+              
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════
+  KONTAK
+  WP Equivalent: template-parts/kontak.php + WPForms
+════════════════════════════════════════════════════════ -->
+<section id="kontak" class="py-20 bg-slate-soft">
+  <div class="max-w-5xl mx-auto px-6">
+    <div class="text-center mb-10">
+      <div class="text-gold text-xs font-bold uppercase tracking-widest mb-2">Hubungi Kami</div>
+      <h2 class="font-display font-800 text-3xl text-navy" style="font-family:'Montserrat',sans-serif; font-weight:800;">Kontak &amp; Kolaborasi</h2>
+      <p class="text-gray-500 text-sm mt-2">Untuk pertanyaan riset, usulan kolaborasi, atau informasi lebih lanjut tentang agenda kajian Nusantara Adiprakarsa.</p>
+    </div>
+    <div class="grid md:grid-cols-2 gap-8">
+      <!-- Form -->
+      <div class="bg-white rounded-xl border border-slate-line p-6">
+        <h3 class="font-semibold text-navy text-base mb-4">Kirim Pesan</h3>
+        <div class="space-y-4">
+          <div>
+            <label class="text-xs font-semibold text-gray-600 block mb-1">Nama Lengkap</label>
+            <input type="text" placeholder="Nama Anda" class="w-full border border-slate-line rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-navy transition-colors"/>
+          </div>
+          <div>
+            <label class="text-xs font-semibold text-gray-600 block mb-1">Email</label>
+            <input type="email" placeholder="email@institusi.ac.id" class="w-full border border-slate-line rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-navy transition-colors"/>
+          </div>
+          <div>
+            <label class="text-xs font-semibold text-gray-600 block mb-1">Instansi / Lembaga</label>
+            <input type="text" placeholder="Nama institusi Anda" class="w-full border border-slate-line rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-navy transition-colors"/>
+          </div>
+          <div>
+            <label class="text-xs font-semibold text-gray-600 block mb-1">Pesan</label>
+            <textarea rows="4" placeholder="Uraikan kebutuhan atau usulan kolaborasi Anda..." class="w-full border border-slate-line rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-navy transition-colors resize-none"></textarea>
+          </div>
+          <button onclick="alert('Formulir kontak akan aktif saat website live di Netlify Forms.')" class="btn-primary w-full py-3 rounded-lg text-sm font-bold">
+            Kirim Pesan
+          </button>
+        </div>
+      </div>
+      <!-- Info kontak -->
+      <div class="space-y-4">
+        <div class="bg-white rounded-xl border border-slate-line p-5">
+          <div class="flex items-start gap-3">
+            <svg class="w-5 h-5 text-gold mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><circle cx="12" cy="11" r="3"/></svg>
+            <div>
+              <div class="font-semibold text-navy text-sm mb-1">Alamat</div>
+              <div class="text-gray-500 text-xs leading-relaxed">
+                Bandung, Jawa Barat, Indonesia
+                
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl border border-slate-line p-5">
+          <div class="flex items-start gap-3">
+            <svg class="w-5 h-5 text-gold mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            <div>
+              <div class="font-semibold text-navy text-sm mb-1">Email Resmi</div>
+              <div class="text-gray-500 text-xs">
+                info@adiprakarsa-institut.or.id
+                
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl border border-slate-line p-5">
+          <div class="flex items-start gap-3">
+            <svg class="w-5 h-5 text-gold mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            <div>
+              <div class="font-semibold text-navy text-sm mb-1">Jam Operasional</div>
+              <div class="text-gray-500 text-xs">Senin – Jumat, 08.00 – 17.00 WIB</div>
+            </div>
+          </div>
+        </div>
+        <div class="bg-navy rounded-xl p-5 text-white">
+          <div class="text-gold text-xs font-bold uppercase tracking-widest mb-2">Untuk Kolaborasi Riset</div>
+          <p class="text-gray-300 text-xs leading-relaxed">
+            Kami membuka peluang kolaborasi dengan universitas, lembaga pemerintah, dan organisasi masyarakat sipil yang memiliki agenda riset kebijakan publik yang sejalan.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<!-- WP Equivalent: footer.php + widget areas -->
+<footer class="text-gray-300">
+  <div class="max-w-7xl mx-auto px-6 py-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+
+    <div class="lg:col-span-1">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-9 h-9 rounded-lg flex items-center justify-center" style="background:rgba(255,255,255,0.08);">
+          <svg viewBox="0 0 32 32" class="w-5 h-5" fill="none"><rect x="5" y="26" width="22" height="2.5" rx="1" fill="#C9A84C"/><rect x="8" y="12" width="3" height="14" rx=".5" fill="white" opacity=".8"/><rect x="14.5" y="9" width="3" height="17" rx=".5" fill="white"/><rect x="21" y="12" width="3" height="14" rx=".5" fill="white" opacity=".8"/><path d="M4 11.5L16 4L28 11.5H4Z" fill="#C9A84C"/></svg>
+        </div>
+        <div>
+          <div class="font-display font-800 text-white text-sm" style="font-family:'Montserrat',sans-serif; font-weight:800;">Adiprakarsa Institut</div>
+          <div class="text-gray-500 text-[10px]">Lembaga Riset & Kajian Kebijakan Publik</div>
+        </div>
+      </div>
+      <p class="text-gray-400 text-xs leading-relaxed mb-4">
+        Kajian kebijakan publik berbasis riset strategis terkini untuk Indonesia yang berkeadilan, berkelanjutan, dan berdaya saing.
+      </p>
+    </div>
+
+    <div>
+      <h4 class="text-white text-xs font-bold uppercase tracking-widest mb-4">Direktori Riset</h4>
+      <ul class="space-y-2 text-xs">
+        <li><a href="#fokus-riset" class="text-gray-400 hover:text-gold transition-colors">Kebijakan Fiskal &amp; Anggaran</a></li>
+        <li><a href="#fokus-riset" class="text-gray-400 hover:text-gold transition-colors">Kebijakan Sosial &amp; Vokasi</a></li>
+        <li><a href="#fokus-riset" class="text-gray-400 hover:text-gold transition-colors">Tata Kelola &amp; Birokrasi</a></li>
+        <li><a href="#fokus-riset" class="text-gray-400 hover:text-gold transition-colors">Infrastruktur &amp; Konektivitas</a></li>
+        <li><a href="#fokus-riset" class="text-gray-400 hover:text-gold transition-colors">Kebijakan Energi &amp; Lingkungan</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h4 class="text-white text-xs font-bold uppercase tracking-widest mb-4">Tentang Lembaga</h4>
+      <ul class="space-y-2 text-xs">
+        <li><a href="#tentang" class="text-gray-400 hover:text-gold transition-colors">Sejarah &amp; Pendirian</a></li>
+        <li><a href="#tentang" class="text-gray-400 hover:text-gold transition-colors">Visi &amp; Misi</a></li>
+        <li><a href="#tim" class="text-gray-400 hover:text-gold transition-colors">Tim Peneliti</a></li>
+        <li><a href="#kontak" class="text-gray-400 hover:text-gold transition-colors">Kemitraan &amp; Kolaborasi</a></li>
+        <li><a href="articles.html" class="text-gray-400 hover:text-gold transition-colors">Publikasi &amp; Dokumen</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h4 class="text-white text-xs font-bold uppercase tracking-widest mb-4">Kontak</h4>
+      <div class="space-y-2 text-xs text-gray-400">
+        <div>Bandung, Jawa Barat </div>
+        <div>info@adiprakarsa-institut.or.id </div>
+        <div>Senin–Jumat, 08.00–17.00</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="border-t border-white/8">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <p class="text-gray-500 text-[11px]">
+        &copy; 2026 Adiprakarsa Institut. Hak Cipta Dilindungi. Di bawah naungan Yayasan Nusantara Adiprakarsa.
+      </p>
+    </div>
+  </div>
+</footer>
+
+
+<!-- Shared Application Layer -->
+<script src="js/app.js"></script>
+
+<script>
+  // ── Global handlers (referenced by inline onclick in HTML) ──
+  function toggleMobileMenu() {
+    if (window.NAP && NAP.MobileMenu) NAP.MobileMenu.toggle();
+  }
+  function toggleSearch() {
+    if (window.NAP && NAP.SearchModal) NAP.SearchModal.toggle();
+  }
+
+  // ── Direktori section: load articles + filters ──
+  (function () {
+    var allArticles = [];
+    var activeFilters = { sector: 'all', status: 'all' };
+    var grid = document.getElementById('cards-grid');
+    var noResults = document.getElementById('no-results');
+
+    function renderCards(articles) {
+      if (!grid) return;
+      if (!articles.length) {
+        grid.innerHTML = '';
+        if (noResults) noResults.classList.remove('hidden');
+        return;
+      }
+      if (noResults) noResults.classList.add('hidden');
+      grid.innerHTML = articles.map(function (a) {
+        return NAP.renderArticleCard(a);
+      }).join('');
+    }
+
+    function syncPillUI() {
+      document.querySelectorAll('.filter-pill[data-filter="sector"]').forEach(function (p) {
+        p.classList.toggle('active', p.dataset.value === activeFilters.sector);
+      });
+      document.querySelectorAll('.filter-pill[data-filter="status"]').forEach(function (p) {
+        p.classList.toggle('active', p.dataset.value === activeFilters.status);
+      });
+    }
+
+    function sectorMatch(articleSector, filterValue) {
+      var s = (articleSector || '').toLowerCase().replace(/[\s-]/g, '');
+      var f = (filterValue || '').toLowerCase().replace(/[\s-]/g, '');
+      return s === f;
+    }
+
+    function applyFilters() {
+      var filtered = allArticles;
+      if (activeFilters.sector && activeFilters.sector !== 'all') {
+        filtered = filtered.filter(function (a) {
+          return sectorMatch(a.sector, activeFilters.sector);
+        });
+      }
+      if (activeFilters.status && activeFilters.status !== 'all') {
+        filtered = filtered.filter(function (a) {
+          return (a.status || 'draft') === activeFilters.status;
+        });
+      }
+      renderCards(filtered);
+      syncPillUI();
+    }
+
+    window.resetFilters = function () {
+      activeFilters.sector = 'all';
+      activeFilters.status = 'all';
+      applyFilters();
+    };
+
+    document.querySelectorAll('.filter-pill[data-filter]').forEach(function (pill) {
+      pill.addEventListener('click', function () {
+        var fg = this.dataset.filter;
+        var fv = this.dataset.value;
+        document.querySelectorAll('.filter-pill[data-filter="' + fg + '"]').forEach(function (p) {
+          p.classList.remove('active');
+        });
+        this.classList.add('active');
+        activeFilters[fg] = fv;
+        applyFilters();
+      });
+    });
+
+    // Load articles from shared repository
+    NAP.ArticleRepository.loadAll().then(function (articles) {
+      allArticles = articles;
+      renderCards(allArticles);
+    }).catch(function (err) {
+      console.error('Failed to load articles:', err);
+    });
+  })();
+</script>
+
+<!-- CMS Sync — reads JSON and updates HTML content -->
+<script src="js/sync.js"></script>
+
+</body>
+</html>
