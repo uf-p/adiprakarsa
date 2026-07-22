@@ -21,7 +21,7 @@ const fs = require('fs');
 const path = require('path');
 
 const ARTICLES_DIR = path.join(__dirname, '..', 'data', 'articles');
-const MD_DIR = path.join(ARTICLES_DIR, 'md');
+//const MD_DIR = path.join(ARTICLES_DIR, 'md');
 const MANIFEST_PATH = path.join(ARTICLES_DIR, 'manifest.json');
 
 // Konfigurasi
@@ -91,11 +91,6 @@ function generate() {
   console.log(`Scanning: ${ARTICLES_DIR}`);
   scanDirectory(ARTICLES_DIR, articles, ARTICLES_DIR);
 
-  // Scan md subfolder (jika ada file di level yang lebih dalam)
-  if (fs.existsSync(MD_DIR)) {
-    console.log(`Scanning: ${MD_DIR}`);
-    scanDirectory(MD_DIR, articles, ARTICLES_DIR);
-  }
 
   // Sort hasil
   const sortedArticles = Array.from(articles).sort();
