@@ -1,6 +1,7 @@
 [build]
   publish = "."
   command = "node scripts/generate-manifest.js"
+  # ignore = "git diff --quiet HEAD^ HEAD -- ':!data'"
 
 [build.processing]
   skip_processing = false
