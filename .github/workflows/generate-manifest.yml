@@ -5,6 +5,7 @@ on:
     paths:
       - 'data/articles/**/*.json'
       - 'data/articles/**/*.md'
+      - 'data/articles/md/*.md'
       - 'data/articles/**/*.html'
       - '!data/articles/manifest.json'
     branches:
