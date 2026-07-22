@@ -1,7 +1,14 @@
 {
-  "generated": "2026-07-21T00:00:00Z",
+  "generated": "2026-07-22T03:22:22.539Z",
   "count": 3,
   "articles": [
+    {
+      "slug": "analisis-dampak-fiscal-policy",
+      "file": "md/analisis-dampak-fiscal-policy.md",
+      "name": "analisis-dampak-fiscal-policy.md",
+      "ext": ".md",
+      "type": "markdown"
+    },
     {
       "slug": "reformasi-fiskal-daerah",
       "file": "reformasi-fiskal-daerah.json",
@@ -15,13 +22,6 @@
       "name": "tinjauan-kebijakan-penetapan-waktu-ibadah.json",
       "ext": ".json",
       "type": "json"
-    },
-    {
-      "slug": "analisis-dampak-fiscal-policy",
-      "file": "md/analisis-dampak-fiscal-policy.md",
-      "name": "analisis-dampak-fiscal-policy.md",
-      "ext": ".md",
-      "type": "markdown"
     }
   ]
 }
