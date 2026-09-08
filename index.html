@@ -813,31 +813,43 @@
       <p class="text-gray-500 text-sm mt-2">Untuk pertanyaan riset, usulan kolaborasi, atau informasi lebih lanjut tentang agenda kajian Nusantara Adiprakarsa.</p>
     </div>
     <div class="grid md:grid-cols-2 gap-8">
-      <!-- Form -->
+      
+      <!-- Form Aktif -->
       <div class="bg-white rounded-xl border border-slate-line p-6">
         <h3 class="font-semibold text-navy text-base mb-4">Kirim Pesan</h3>
-        <div class="space-y-4">
+        
+        <form id="contact-form" onsubmit="handleFormSubmit(event)" class="space-y-4">
           <div>
-            <label class="text-xs font-semibold text-gray-600 block mb-1">Nama Lengkap</label>
-            <input type="text" placeholder="Nama Anda" class="w-full border border-slate-line rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-navy transition-colors"/>
+            <label for="nama" class="text-xs font-semibold text-gray-600 block mb-1">Nama Lengkap</label>
+            <input type="text" id="nama" name="nama" required placeholder="Nama Anda" class="w-full border border-slate-line rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-navy transition-colors"/>
           </div>
           <div>
-            <label class="text-xs font-semibold text-gray-600 block mb-1">Email</label>
-            <input type="email" placeholder="email@institusi.ac.id" class="w-full border border-slate-line rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-navy transition-colors"/>
+            <label for="email" class="text-xs font-semibold text-gray-600 block mb-1">Email</label>
+            <input type="email" id="email" name="email" required placeholder="email@institusi.ac.id" class="w-full border border-slate-line rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-navy transition-colors"/>
           </div>
           <div>
-            <label class="text-xs font-semibold text-gray-600 block mb-1">Instansi / Lembaga</label>
-            <input type="text" placeholder="Nama institusi Anda" class="w-full border border-slate-line rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-navy transition-colors"/>
+            <label for="instansi" class="text-xs font-semibold text-gray-600 block mb-1">Instansi / Lembaga</label>
+            <input type="text" id="instansi" name="instansi" placeholder="Nama institusi Anda" class="w-full border border-slate-line rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-navy transition-colors"/>
           </div>
           <div>
-            <label class="text-xs font-semibold text-gray-600 block mb-1">Pesan</label>
-            <textarea rows="4" placeholder="Uraikan kebutuhan atau usulan kolaborasi Anda..." class="w-full border border-slate-line rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-navy transition-colors resize-none"></textarea>
+            <label for="pesan" class="text-xs font-semibold text-gray-600 block mb-1">Pesan</label>
+            <textarea id="pesan" name="pesan" rows="4" required placeholder="Uraikan kebutuhan atau usulan kolaborasi Anda..." class="w-full border border-slate-line rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-navy transition-colors resize-none"></textarea>
           </div>
-          <button onclick="alert('Formulir kontak akan aktif saat website live di Netlify Forms.')" class="btn-primary w-full py-3 rounded-lg text-sm font-bold">
+          <button type="submit" class="btn-primary w-full py-3 rounded-lg text-sm font-bold">
             Kirim Pesan
           </button>
+        </form>
+
+        <!-- Pesan Sukses (Tersembunyi secara bawaan) -->
+        <div id="form-success" class="hidden text-center py-6">
+          <div class="w-12 h-12 bg-emerald-muted text-emerald rounded-full flex items-center justify-center mx-auto mb-3">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+          </div>
+          <h4 class="font-bold text-navy text-base mb-1">Pesan Terkirim!</h4>
+          <p class="text-xs text-gray-500">Terima kasih. Kami akan segera menghubungi Anda melalui email.</p>
         </div>
       </div>
+
       <!-- Info kontak -->
       <div class="space-y-4">
         <div class="bg-white rounded-xl border border-slate-line p-5">
@@ -847,7 +859,6 @@
               <div class="font-semibold text-navy text-sm mb-1">Alamat</div>
               <div class="text-gray-500 text-xs leading-relaxed">
                 Bandung, Jawa Barat, Indonesia
-                
               </div>
             </div>
           </div>
@@ -859,7 +870,6 @@
               <div class="font-semibold text-navy text-sm mb-1">Email Resmi</div>
               <div class="text-gray-500 text-xs">
                 info@adiprakarsa-institut.or.id
-                
               </div>
             </div>
           </div>
@@ -883,7 +893,7 @@
     </div>
   </div>
 </section>
-
+  
 <!-- FOOTER -->
 <!-- WP Equivalent: footer.php + widget areas -->
 <footer class="text-gray-300">
@@ -1041,6 +1051,17 @@
 
 <!-- CMS Sync — reads JSON and updates HTML content -->
 <script src="js/sync.js"></script>
+
+<!-- Tambahkan script ini sebelum tag tutup </body> -->
+<script>
+  function handleFormSubmit(event) {
+    event.preventDefault(); // Mencegah reload halaman
+    
+    // Sembunyikan form dan tampilkan pesan sukses
+    document.getElementById('contact-form').classList.add('hidden');
+    document.getElementById('form-success').classList.remove('hidden');
+  }
+</script>  
 
 </body>
 </html>
