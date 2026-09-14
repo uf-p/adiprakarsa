@@ -818,7 +818,12 @@
       <div class="bg-white rounded-xl border border-slate-line p-6">
         <h3 class="font-semibold text-navy text-base mb-4">Kirim Pesan</h3>
         
-        <form id="contact-form" onsubmit="handleFormSubmit(event)" class="space-y-4">
+        <form id="contact-form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" onsubmit="handleFormSubmit(event)" class="space-y-4">
+          <input type="hidden" name="form-name" value="contact" />
+          <p class="hidden" style="position:absolute; overflow:hidden; clip:rect(0 0 0 0); height:1px; width:1px; margin:-1px; padding:0; border:0;">
+            <label>Jangan diisi: <input name="bot-field" /></label>
+          </p>
+
           <div>
             <label for="nama" class="text-xs font-semibold text-gray-600 block mb-1">Nama Lengkap</label>
             <input type="text" id="nama" name="nama" required placeholder="Nama Anda" class="w-full border border-slate-line rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-navy transition-colors"/>
@@ -1054,12 +1059,21 @@
 
 <!-- Tambahkan script ini sebelum tag tutup </body> -->
 <script>
-  function handleFormSubmit(event) {
-    event.preventDefault(); // Mencegah reload halaman
-    
-    // Sembunyikan form dan tampilkan pesan sukses
-    document.getElementById('contact-form').classList.add('hidden');
-    document.getElementById('form-success').classList.remove('hidden');
+  async function handleFormSubmit(event) {
+    event.preventDefault();
+    const form = event.target;
+    const formData = new FormData(form);
+    try {
+      await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(formData).toString()
+      });
+      document.getElementById('contact-form').classList.add('hidden');
+      document.getElementById('form-success').classList.remove('hidden');
+    } catch (err) {
+      alert('Gagal mengirim. Coba lagi.');
+    }
   }
 </script>  
 
