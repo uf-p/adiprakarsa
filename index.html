@@ -1063,16 +1063,20 @@
     event.preventDefault();
     const form = event.target;
     const formData = new FormData(form);
+
     try {
+      // Pengiriman data sesungguhnya ke Netlify Forms via AJAX
       await fetch('/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams(formData).toString()
       });
+
+      // Sembunyikan form dan tampilkan pesan sukses
       document.getElementById('contact-form').classList.add('hidden');
       document.getElementById('form-success').classList.remove('hidden');
     } catch (err) {
-      alert('Gagal mengirim. Coba lagi.');
+      alert('Gagal mengirim pesan. Silakan coba lagi.');
     }
   }
 </script>  
